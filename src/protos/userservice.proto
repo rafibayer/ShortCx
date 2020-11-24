@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package shortcx.user;
+
+import "protos/apiservice.proto";
+
+service UserService {
+    rpc CreateUser (api.CreateUserRequest) returns (api.CreateUserResponse) {}
+}

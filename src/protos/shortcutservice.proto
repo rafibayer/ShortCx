@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package shortcx.shortcut;
+
+import "protos/apiservice.proto";
+
+service ShortcutService {
+    rpc CreateShortcut (api.CreateShortcutRequest) returns (api.CreateShortcutResponse) {}
+    rpc DeleteShortcut (api.DeleteShortcutRequest) returns (api.DeleteShortcutResponse) {}
+    rpc GetShortcut (api.GetShortcutRequest) returns (api.DeleteShortcutResponse) {}
+}

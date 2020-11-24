@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package shortcx.auth;
+
+import "protos/apiservice.proto";
+
+service AuthService {
+    rpc Login (api.LoginRequest) returns (api.LoginResponse) {}
+    rpc Logout (api.LogoutRequest) returns (api.LogoutResponse) {}
+}
