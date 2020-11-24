@@ -1,26 +1,26 @@
 version: "3.8"
 services:
   client_svc:
-    build: services/client
+    build: services/Client
     ports:
       - "80:80"
   proxy_svc:
-    build: services/proxy
+    build: services/Proxy
     ports:
       - "8080:8080"
   api_svc:
-    build: services/apiservice
+    build: services/ApiService
     ports:
       - "9090:9090"
   auth_svc:
-    build: services/auth
+    build: services/Auth
     ports:
       - "9091:9091"
-  shorcut_svc:
-    build: services/shorcut
+  shortcut_svc:
+    build: services/Shortcut
     ports:
       - "9092:9092"
   user_svc:
-    build: services/user
+    build: services/User
     ports:
       - "9093:9093"
