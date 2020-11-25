@@ -1,18 +1,24 @@
 package main
 
 import (
-	api "ShortCx/protos"
 	"context"
+	"log"
+	"reflect"
+
+	api "github.com/rafibayer/ShortCx/api"
 )
 
-type APIServiceServer struct {
+type server struct {
 	api.UnimplementedAPIServiceServer
 }
 
-func (s *APIServiceServer) CreateUser(ctx context.Context, request *api.CreateUserRequest) (*api.CreateUserResponse, error) {
+func (s *server) CreateUser(ctx context.Context, in *api.CreateUserRequest) (*api.CreateUserResponse, error) {
 	return nil, nil
 }
 
 func main() {
+	//myvar := server{}
+
+	log.Println(reflect.TypeOf(api.CreateUserRequest{}).NumMethod())
 
 }

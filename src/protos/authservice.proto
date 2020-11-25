@@ -1,5 +1,5 @@
 syntax = "proto3";
-
+option go_package = "ShortCx/auth";
 package shortcx.auth;
 
 import "protos/apiservice.proto";
