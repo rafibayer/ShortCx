@@ -1,2 +1,2 @@
 # Secrets :-)
-src/services/database/*.env
+src/services/Database/*.env
