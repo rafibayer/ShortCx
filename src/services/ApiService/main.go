@@ -1,15 +1,18 @@
 package main
 
 import (
+	api "ShortCx/protos"
 	"context"
-
-	pb "github.com/rafibayer/ShortCx/src/services/ApiService/protos"
 )
 
-type ApiServiceServer struct {
-	pb.UnimplementedAPIServiceServer
+type APIServiceServer struct {
+	api.UnimplementedAPIServiceServer
 }
 
-func (s *ApiServiceServer) CreateUser(ctx context.Context, request *CreateUserRequest) (*CreateUserResponse, error) {
+func (s *APIServiceServer) CreateUser(ctx context.Context, request *api.CreateUserRequest) (*api.CreateUserResponse, error) {
+	return nil, nil
+}
+
+func main() {
 
 }
