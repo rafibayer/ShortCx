@@ -1,24 +1,35 @@
 package main
 
 import (
-	"context"
 	"log"
-	"reflect"
+	"net"
+	"os"
 
-	api "github.com/rafibayer/ShortCx/api"
+	"github.com/rafibayer/ShortCx/api"
+	server "github.com/rafibayer/ShortCx/server"
+	"google.golang.org/grpc"
 )
 
-type server struct {
-	api.UnimplementedAPIServiceServer
-}
-
-func (s *server) CreateUser(ctx context.Context, in *api.CreateUserRequest) (*api.CreateUserResponse, error) {
-	return nil, nil
+// getenv gets an enviornment variable value given a key or returns fallback and logs if empty
+func getenv(key string, fallback string) string {
+	value := os.Getenv(key)
+	if len(value) == 0 {
+		log.Printf("Env key %s was not set, using fallback value \"%s\"", key, fallback)
+		return fallback
+	}
+	return value
 }
 
 func main() {
-	//myvar := server{}
-
-	log.Println(reflect.TypeOf(api.CreateUserRequest{}).NumMethod())
-
+	PORT := getenv("PORT", ":9090")
+	lis, err := net.Listen("tcp", "localhost"+PORT)
+	if err != nil {
+		log.Fatalf("Failed to listen on port %s (%v)", PORT, err)
+	}
+	s := grpc.NewServer()
+	api.RegisterAPIServiceServer(s, &server.Server{ /* Inject service addresses here later */ })
+	log.Printf("Serving on port %s ...", PORT)
+	if err := s.Serve(lis); err != nil {
+		log.Fatalf("Failed to serve on port %s (%v)", PORT, err)
+	}
 }
