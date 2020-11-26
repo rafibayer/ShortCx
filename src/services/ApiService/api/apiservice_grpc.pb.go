@@ -41,7 +41,7 @@ func NewAPIServiceClient(cc grpc.ClientConnInterface) APIServiceClient {
 
 func (c *aPIServiceClient) CreateUser(ctx context.Context, in *CreateUserRequest, opts ...grpc.CallOption) (*CreateUserResponse, error) {
 	out := new(CreateUserResponse)
-	err := c.cc.Invoke(ctx, "/shortcx.api.APIService/CreateUser", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/protos.APIService/CreateUser", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,7 @@ func (c *aPIServiceClient) CreateUser(ctx context.Context, in *CreateUserRequest
 
 func (c *aPIServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...grpc.CallOption) (*LoginResponse, error) {
 	out := new(LoginResponse)
-	err := c.cc.Invoke(ctx, "/shortcx.api.APIService/Login", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/protos.APIService/Login", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +59,7 @@ func (c *aPIServiceClient) Login(ctx context.Context, in *LoginRequest, opts ...
 
 func (c *aPIServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts ...grpc.CallOption) (*LogoutResponse, error) {
 	out := new(LogoutResponse)
-	err := c.cc.Invoke(ctx, "/shortcx.api.APIService/Logout", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/protos.APIService/Logout", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -68,7 +68,7 @@ func (c *aPIServiceClient) Logout(ctx context.Context, in *LogoutRequest, opts .
 
 func (c *aPIServiceClient) CreateShortcut(ctx context.Context, in *CreateShortcutRequest, opts ...grpc.CallOption) (*CreateShortcutResponse, error) {
 	out := new(CreateShortcutResponse)
-	err := c.cc.Invoke(ctx, "/shortcx.api.APIService/CreateShortcut", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/protos.APIService/CreateShortcut", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,7 +77,7 @@ func (c *aPIServiceClient) CreateShortcut(ctx context.Context, in *CreateShortcu
 
 func (c *aPIServiceClient) DeleteShortcut(ctx context.Context, in *DeleteShortcutRequest, opts ...grpc.CallOption) (*DeleteShortcutResponse, error) {
 	out := new(DeleteShortcutResponse)
-	err := c.cc.Invoke(ctx, "/shortcx.api.APIService/DeleteShortcut", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/protos.APIService/DeleteShortcut", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -86,7 +86,7 @@ func (c *aPIServiceClient) DeleteShortcut(ctx context.Context, in *DeleteShortcu
 
 func (c *aPIServiceClient) GetShortcut(ctx context.Context, in *GetShortcutRequest, opts ...grpc.CallOption) (*GetShortcutResponse, error) {
 	out := new(GetShortcutResponse)
-	err := c.cc.Invoke(ctx, "/shortcx.api.APIService/GetShortcut", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/protos.APIService/GetShortcut", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -157,7 +157,7 @@ func _APIService_CreateUser_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/shortcx.api.APIService/CreateUser",
+		FullMethod: "/protos.APIService/CreateUser",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(APIServiceServer).CreateUser(ctx, req.(*CreateUserRequest))
@@ -175,7 +175,7 @@ func _APIService_Login_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/shortcx.api.APIService/Login",
+		FullMethod: "/protos.APIService/Login",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(APIServiceServer).Login(ctx, req.(*LoginRequest))
@@ -193,7 +193,7 @@ func _APIService_Logout_Handler(srv interface{}, ctx context.Context, dec func(i
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/shortcx.api.APIService/Logout",
+		FullMethod: "/protos.APIService/Logout",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(APIServiceServer).Logout(ctx, req.(*LogoutRequest))
@@ -211,7 +211,7 @@ func _APIService_CreateShortcut_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/shortcx.api.APIService/CreateShortcut",
+		FullMethod: "/protos.APIService/CreateShortcut",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(APIServiceServer).CreateShortcut(ctx, req.(*CreateShortcutRequest))
@@ -229,7 +229,7 @@ func _APIService_DeleteShortcut_Handler(srv interface{}, ctx context.Context, de
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/shortcx.api.APIService/DeleteShortcut",
+		FullMethod: "/protos.APIService/DeleteShortcut",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(APIServiceServer).DeleteShortcut(ctx, req.(*DeleteShortcutRequest))
@@ -247,7 +247,7 @@ func _APIService_GetShortcut_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/shortcx.api.APIService/GetShortcut",
+		FullMethod: "/protos.APIService/GetShortcut",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(APIServiceServer).GetShortcut(ctx, req.(*GetShortcutRequest))
@@ -256,7 +256,7 @@ func _APIService_GetShortcut_Handler(srv interface{}, ctx context.Context, dec f
 }
 
 var _APIService_serviceDesc = grpc.ServiceDesc{
-	ServiceName: "shortcx.api.APIService",
+	ServiceName: "protos.APIService",
 	HandlerType: (*APIServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -285,5 +285,5 @@ var _APIService_serviceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "protos/apiservice.proto",
+	Metadata: "apiservice.proto",
 }
