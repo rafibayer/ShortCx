@@ -3,7 +3,7 @@ option go_package = "shortcut;shortcut";
 import "apiservice.proto";
 
 service ShortcutService {
-    rpc CreateShortcut (api.CreateShortcutRequest) returns (api.CreateShortcutResponse) {}
-    rpc DeleteShortcut (api.DeleteShortcutRequest) returns (api.DeleteShortcutResponse) {}
-    rpc GetShortcut (api.GetShortcutRequest) returns (api.DeleteShortcutResponse) {}
+    rpc CreateShortcut (CreateShortcutRequest) returns (CreateShortcutResponse) {}
+    rpc DeleteShortcut (DeleteShortcutRequest) returns (DeleteShortcutResponse) {}
+    rpc GetShortcut (GetShortcutRequest) returns (DeleteShortcutResponse) {}
 }

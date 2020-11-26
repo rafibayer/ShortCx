@@ -5,5 +5,5 @@ option go_package = "user;user";
 import "apiservice.proto";
 
 service UserService {
-    rpc CreateUser (api.CreateUserRequest) returns (api.CreateUserResponse) {}
+    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {}
 }

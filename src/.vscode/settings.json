@@ -1,0 +1,9 @@
+{
+    "protoc": {
+        "path": "C:\\Program Files\\protoc\\bin\\protoc.exe",
+        "compile_on_save": false,
+        "options": [
+            "--proto_path=${workspaceFolder}/protos",
+        ]
+    }
+}
