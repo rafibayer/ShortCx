@@ -1,6 +1,6 @@
 import grpc
-from . import apiservice_pb2
-from . import apiservice_pb2_grpc
+import apiservice_pb2
+import apiservice_pb2_grpc
 import unittest
 
 SERVICE_ADDR = "localhost:9090"

@@ -16,32 +16,32 @@ class APIServiceStub(object):
             channel: A grpc.Channel.
         """
         self.CreateUser = channel.unary_unary(
-                '/shortcx.api.APIService/CreateUser',
+                '/protos.APIService/CreateUser',
                 request_serializer=apiservice__pb2.CreateUserRequest.SerializeToString,
                 response_deserializer=apiservice__pb2.CreateUserResponse.FromString,
                 )
         self.Login = channel.unary_unary(
-                '/shortcx.api.APIService/Login',
+                '/protos.APIService/Login',
                 request_serializer=apiservice__pb2.LoginRequest.SerializeToString,
                 response_deserializer=apiservice__pb2.LoginResponse.FromString,
                 )
         self.Logout = channel.unary_unary(
-                '/shortcx.api.APIService/Logout',
+                '/protos.APIService/Logout',
                 request_serializer=apiservice__pb2.LogoutRequest.SerializeToString,
                 response_deserializer=apiservice__pb2.LogoutResponse.FromString,
                 )
         self.CreateShortcut = channel.unary_unary(
-                '/shortcx.api.APIService/CreateShortcut',
+                '/protos.APIService/CreateShortcut',
                 request_serializer=apiservice__pb2.CreateShortcutRequest.SerializeToString,
                 response_deserializer=apiservice__pb2.CreateShortcutResponse.FromString,
                 )
         self.DeleteShortcut = channel.unary_unary(
-                '/shortcx.api.APIService/DeleteShortcut',
+                '/protos.APIService/DeleteShortcut',
                 request_serializer=apiservice__pb2.DeleteShortcutRequest.SerializeToString,
                 response_deserializer=apiservice__pb2.DeleteShortcutResponse.FromString,
                 )
         self.GetShortcut = channel.unary_unary(
-                '/shortcx.api.APIService/GetShortcut',
+                '/protos.APIService/GetShortcut',
                 request_serializer=apiservice__pb2.GetShortcutRequest.SerializeToString,
                 response_deserializer=apiservice__pb2.GetShortcutResponse.FromString,
                 )
@@ -128,7 +128,7 @@ def add_APIServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'shortcx.api.APIService', rpc_method_handlers)
+            'protos.APIService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -148,7 +148,7 @@ class APIService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/shortcx.api.APIService/CreateUser',
+        return grpc.experimental.unary_unary(request, target, '/protos.APIService/CreateUser',
             apiservice__pb2.CreateUserRequest.SerializeToString,
             apiservice__pb2.CreateUserResponse.FromString,
             options, channel_credentials,
@@ -165,7 +165,7 @@ class APIService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/shortcx.api.APIService/Login',
+        return grpc.experimental.unary_unary(request, target, '/protos.APIService/Login',
             apiservice__pb2.LoginRequest.SerializeToString,
             apiservice__pb2.LoginResponse.FromString,
             options, channel_credentials,
@@ -182,7 +182,7 @@ class APIService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/shortcx.api.APIService/Logout',
+        return grpc.experimental.unary_unary(request, target, '/protos.APIService/Logout',
             apiservice__pb2.LogoutRequest.SerializeToString,
             apiservice__pb2.LogoutResponse.FromString,
             options, channel_credentials,
@@ -199,7 +199,7 @@ class APIService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/shortcx.api.APIService/CreateShortcut',
+        return grpc.experimental.unary_unary(request, target, '/protos.APIService/CreateShortcut',
             apiservice__pb2.CreateShortcutRequest.SerializeToString,
             apiservice__pb2.CreateShortcutResponse.FromString,
             options, channel_credentials,
@@ -216,7 +216,7 @@ class APIService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/shortcx.api.APIService/DeleteShortcut',
+        return grpc.experimental.unary_unary(request, target, '/protos.APIService/DeleteShortcut',
             apiservice__pb2.DeleteShortcutRequest.SerializeToString,
             apiservice__pb2.DeleteShortcutResponse.FromString,
             options, channel_credentials,
@@ -233,7 +233,7 @@ class APIService(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/shortcx.api.APIService/GetShortcut',
+        return grpc.experimental.unary_unary(request, target, '/protos.APIService/GetShortcut',
             apiservice__pb2.GetShortcutRequest.SerializeToString,
             apiservice__pb2.GetShortcutResponse.FromString,
             options, channel_credentials,
