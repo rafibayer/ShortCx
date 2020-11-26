@@ -1,10 +1,11 @@
 syntax = "proto3";
-option go_package = "ShortCx/auth";
-package shortcx.auth;
+import "apiservice.proto";
+option go_package = "auth;auth";
+package protos;
 
-import "protos/apiservice.proto";
 
 service AuthService {
-    rpc Login (api.LoginRequest) returns (api.LoginResponse) {}
-    rpc Logout (api.LogoutRequest) returns (api.LogoutResponse) {}
+
+    rpc Login (LoginRequest) returns (LoginResponse) {}
+    rpc Logout (LogoutRequest) returns (LogoutResponse) {}
 }
