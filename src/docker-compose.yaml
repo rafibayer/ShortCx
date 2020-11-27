@@ -27,6 +27,16 @@ services:
     depends_on: 
       - database_svc
       - session_svc
+    environment: 
+      PORT: '9091'
+      WORKERS: '3'
+      DB_HOST: 'database_svc'
+      DB_USER: 'root'
+      DB_PASS: 'password'
+      DB_NAME: 'db'
+      REDIS_HOST: 'session_svc'
+      REDIS_PORT: '6379'
+      REDIS_MAX_CON: '10'
     ports:
       - "9091:9091"
   shortcut_svc:
@@ -42,12 +52,20 @@ services:
     ports:
       - "9093:9093"
   database_svc:
-    image: mysql
-    command: --default-authentication-plug=mysql_native_password
-    restart: always
-    env_file: ./services/Database/database.env
+    # Connect to db: docker exec <container name> bash
+    #                $ mysql -u <user> -p -h127.0.0.1
+    #                $ <password>
+    image: mysql/mysql-server:latest
+    command: "--socket=/tmp/mysql.sock" # something to do with windows idk
+    ports:
+      - "3306:3306"
     volumes: 
-      - ./_database:/var/lib/mysql
+      - ./_test_db_data:/var/lib/mysql
+    environment: 
+      MYSQL_ROOT_PASSWORD: 'password' # TODO: load these from ignored .env file
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'password'
   session_svc:
     image: redis
     ports: 
