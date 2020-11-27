@@ -2,28 +2,43 @@ version: "3.8"
 services:
   client_svc:
     build: services/Client
+    depends_on: 
+      - proxy_svc
     ports:
       - "80:80"
   proxy_svc:
     build: services/Proxy
+    depends_on: 
+      - api_svc
     ports:
       - "8080:8080"
   api_svc:
     build: services/ApiService
+    depends_on: 
+      - auth_svc
+      - shortcut_svc
+      - user_svc
     environment: 
       - PORT=:9090
     ports:
       - "9090:9090"
   auth_svc:
-    build: services/Auth
+    build: services/AuthService
+    depends_on: 
+      - database_svc
+      - session_svc
     ports:
       - "9091:9091"
   shortcut_svc:
     build: services/Shortcut
+    depends_on: 
+      - database_svc
     ports:
       - "9092:9092"
   user_svc:
     build: services/User
+    depends_on: 
+      - database_svc
     ports:
       - "9093:9093"
   database_svc:
@@ -31,5 +46,11 @@ services:
     command: --default-authentication-plug=mysql_native_password
     restart: always
     env_file: ./services/Database/database.env
+    volumes: 
+      - ./_database:/var/lib/mysql
+  session_svc:
+    image: redis
+    ports: 
+      - "6379:6379"
       
     

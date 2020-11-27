@@ -8,6 +8,8 @@ verify_ssl = true
 [packages]
 grpcio = "*"
 grpcio-tools = "*"
+redis = "*"
+mysql-connector-python = "*"
 
 [requires]
 python_version = "3.8"

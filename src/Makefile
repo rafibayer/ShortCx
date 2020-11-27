@@ -22,7 +22,6 @@ codegen_api:
 	protoc -I=$(PROTO_DIR) --go_out=$(API_OUT) --go_opt=paths=import \
     --go-grpc_out=$(API_OUT) --go-grpc_opt=paths=import \
     $(AUTH_PROTO)
-
 	
 
 codegen_auth:
@@ -32,7 +31,7 @@ codegen_auth:
 	--grpc_python_out=$(AUTH_OUT) \
 	$(AUTH_PROTO)
 
-	# APIService Client
+	# APIService (.proto import dependency)
 	python -m grpc_tools.protoc -I=$(PROTO_DIR) \
 	--python_out=$(AUTH_OUT) \
 	--grpc_python_out=$(AUTH_OUT) \

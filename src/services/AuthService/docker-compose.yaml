@@ -1,0 +1,33 @@
+version: "3.8"
+services: 
+  auth_svc:
+    build: .
+    depends_on: 
+      - database_svc
+      - session_svc
+    environment: 
+      PORT: '9091'
+      WORKERS: '3'
+      DB_HOST: 'database_svc'
+      DB_USER: 'root'
+      DB_PASS: 'password'
+      DB_NAME: 'db'
+      REDIS_HOST: 'session_svc'
+      REDIS_PORT: '6379'
+      REDIS_MAX_CON: '10'
+    ports:
+      - "9091:9091"
+  database_svc:
+    image: mysql/mysql-server:latest
+    ports:
+      - "3306:3306"
+    environment: 
+      MYSQL_ROOT_PASSWORD: 'password'
+      MYSQL_DATABASE: 'db'
+      MYSQL_USER: 'root'
+      MYSQL_PASSWORD: 'password'
+  session_svc:
+    image: redis
+    ports: 
+      - "6379:6379"
+  
