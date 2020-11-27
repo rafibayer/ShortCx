@@ -9,3 +9,11 @@ class AuthException(Exception):
 class SessionDoesNotExistError(AuthException):
     def __init__(self, message='Session Does Not Exist', status_code=StatusCode.NOT_FOUND):
         super().__init__(message, status_code)
+
+class UserDoesNotExistError(AuthException):
+    def __init__(self, message='User Does Not Exist', status_code=StatusCode.NOT_FOUND):
+        super().__init__(message, status_code)
+
+class BadCredentialsError(AuthException):
+    def __init__(self, message='Invalid Credentials', status_code=StatusCode.PERMISSION_DENIED):
+        super().__init__(message, status_code)

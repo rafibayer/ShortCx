@@ -18,9 +18,15 @@ services:
     ports:
       - "9091:9091"
   database_svc:
+    # Connect to db: docker exec <container name> bash
+    #                $ mysql -u <user> -p -h127.0.0.1
+    #                $ <password>
     image: mysql/mysql-server:latest
+    command: "--socket=/tmp/mysql.sock" # something to do with windows idk
     ports:
       - "3306:3306"
+    volumes: 
+      - ./_test_db_data:/var/lib/mysql
     environment: 
       MYSQL_ROOT_PASSWORD: 'password'
       MYSQL_DATABASE: 'db'
