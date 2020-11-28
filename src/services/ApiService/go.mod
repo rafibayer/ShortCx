@@ -1,4 +1,4 @@
-module github.com/rafibayer/ShortCx
+module ShortCx
 
 go 1.14
 

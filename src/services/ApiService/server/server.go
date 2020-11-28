@@ -3,12 +3,14 @@ package server
 import (
 	"context"
 
-	api "github.com/rafibayer/ShortCx/api"
+	api "ShortCx/api"
+	auth "ShortCx/auth"
 )
 
 // Server implements APIService gRPC service
 type Server struct {
 	api.UnimplementedAPIServiceServer
+	AuthClient auth.AuthServiceClient
 	// More fields for other service clients (stubs/addresses/connections idk)
 }
 
