@@ -1,3 +1,4 @@
+# TEST/LOCAL compose for AuthService
 version: "3.8"
 services: 
   auth_svc:

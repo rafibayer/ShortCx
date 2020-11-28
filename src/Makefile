@@ -11,6 +11,7 @@ AUTH_OUT=./services/AuthService/server
 # testing
 TEST_DIR=./test
 API_TEST_OUT=./test/test_ApiService
+AUTH_TEST_OUT=./test/test_AuthService
 
 # Generate Code for APIService
 codegen_api:
@@ -41,9 +42,13 @@ codegen_auth:
 # in the meantime, test files can be run manually
 test: build_test
 	python -m unittest discover $(TEST_DIR)
-	
 
 # Generate all code needed for test clients
 build_test:
+	# APIService
 	python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(API_TEST_OUT) --grpc_python_out=$(API_TEST_OUT) $(API_PROTO)
+
+	# AuthService
+	python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(AUTH_TEST_OUT) --grpc_python_out=$(AUTH_TEST_OUT) $(AUTH_PROTO)
+	python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(AUTH_TEST_OUT) --grpc_python_out=$(AUTH_TEST_OUT) $(API_PROTO)
 

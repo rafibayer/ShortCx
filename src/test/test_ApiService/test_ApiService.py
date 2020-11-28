@@ -5,13 +5,6 @@ import unittest
 
 SERVICE_ADDR = "localhost:9090"
 
-def LogName(func):
-
-    def inner(*args, **kwargs):
-        print(func.__name__)
-        return func(*args, **kwargs)
-    return inner
-
 class TestApiService(unittest.TestCase):
 
     @classmethod
