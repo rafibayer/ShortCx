@@ -1,4 +1,3 @@
 # Secrets :-)
 src/services/Database/*.env
-src/services/AuthService/_test_db_data
 src/_test_db_data
