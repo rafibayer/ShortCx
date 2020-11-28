@@ -20,6 +20,9 @@ TEST_DIR=./test
 API_TEST_OUT=./test/test_ApiService
 AUTH_TEST_OUT=./test/test_AuthService
 
+codegen: codegen_api codegen_auth
+	echo "Generating all"
+
 # Generate Code for APIService
 codegen_api:
 	# APIService 

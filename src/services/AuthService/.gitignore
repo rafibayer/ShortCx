@@ -1,3 +1,7 @@
+# Local/test database
+_test_db_data/
+server/*_pb2*
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
