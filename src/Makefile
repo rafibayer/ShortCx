@@ -1,3 +1,4 @@
+# Contracts
 PROTO_DIR=./protos
 
 # APIService
@@ -20,6 +21,7 @@ codegen_api:
     --go-grpc_out=$(API_OUT) --go-grpc_opt=paths=import \
     $(API_PROTO)
 
+	# AuthService (Client)
 	protoc -I=$(PROTO_DIR) --go_out=$(API_OUT) --go_opt=paths=import \
     --go-grpc_out=$(API_OUT) --go-grpc_opt=paths=import \
     $(AUTH_PROTO)

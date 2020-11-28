@@ -1,7 +1,18 @@
 from grpc import StatusCode
 
 class AuthException(Exception):
+    """Base exception for AuthService
+
+    Args:
+        Exception (class): Python base exception class
+    """
     def __init__(self, message, status_code):
+        """Creates a new AuthException
+
+        Args:
+            message (str): Error details for user
+            status_code (grpc.StatusCode): gRPC error code
+        """
         super().__init__(message)
         self.message = message
         self.status_code = status_code

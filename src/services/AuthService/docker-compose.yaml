@@ -1,4 +1,5 @@
 # TEST/LOCAL compose for AuthService
+# Run: docker-compose up -d --build
 version: "3.8"
 services: 
   auth_svc:
@@ -24,8 +25,6 @@ services:
     #                $ <password>
     image: mysql/mysql-server:latest
     command: "--socket=/tmp/mysql.sock" # something to do with windows idk
-    ports:
-      - "3306:3306"
     volumes: 
       - ./_test_db_data:/var/lib/mysql
     environment: 
@@ -35,6 +34,4 @@ services:
       MYSQL_PASSWORD: 'password'
   session_svc:
     image: redis
-    ports: 
-      - "6379:6379"
   

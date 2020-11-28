@@ -37,28 +37,20 @@ services:
       REDIS_HOST: 'session_svc'
       REDIS_PORT: '6379'
       REDIS_MAX_CON: '10'
-    ports:
-      - "9091:9091"
   # shortcut_svc:
   #   build: services/Shortcut
   #   depends_on: 
   #     - database_svc
-  #   ports:
-  #     - "9092:9092"
   # user_svc:
   #   build: services/User
   #   depends_on: 
   #     - database_svc
-  #   ports:
-  #     - "9093:9093"
   database_svc:
     # Connect to db: docker exec <container name> bash
     #                $ mysql -u <user> -p -h127.0.0.1
     #                $ <password>
     image: mysql/mysql-server:latest
     command: "--socket=/tmp/mysql.sock" # something to do with windows idk
-    ports:
-      - "3306:3306"
     volumes: 
       - ./_test_db_data:/var/lib/mysql
     environment: 
@@ -68,7 +60,5 @@ services:
       MYSQL_PASSWORD: 'password'
   session_svc:
     image: redis
-    ports: 
-      - "6379:6379"
       
     

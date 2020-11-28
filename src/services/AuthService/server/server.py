@@ -16,11 +16,25 @@ logging.basicConfig(level=logging.DEBUG,
 
 class AuthService(authservice_pb2_grpc.AuthServiceServicer):
 
-    def __init__(self, auth_controller):
+    def __init__(self, auth_controller: Controller):
+        """Creates a new AuthService object
+
+        Args:
+            auth_controller (Controller): Auth controller
+        """
         super().__init__()
         self.auth_controller = auth_controller
 
-    def Login(self, request, context):
+    def Login(self, request: apiservice_pb2.LoginRequest, context: grpc.RpcContext) -> apiservice_pb2.LoginResponse:
+        """Handles Login RPC
+
+        Args:
+            request (LoginRequest): User login request forwarded from ApiService
+            context (grpc.RpcContext): Request context
+
+        Returns:
+            LoginResponse: response containing auth_token or error details
+        """
         try:
             return self.auth_controller.login(request)
         except exceptions.AuthException as e:
@@ -28,7 +42,16 @@ class AuthService(authservice_pb2_grpc.AuthServiceServicer):
             context.set_code(e.status_code)
             return apiservice_pb2.LoginResponse()
 
-    def Logout(self, request, context):
+    def Logout(self, request: apiservice_pb2.LogoutRequest, context: grpc.RpcContext) -> apiservice_pb2.LogoutResponse:
+        """Handles Logout RPC
+
+        Args:
+            request (LogoutRequest): User logout request forwarded from ApiService
+            context (grpc.RpcContext): Request context
+
+        Returns:
+            LogoutResponse: Response containing success message or error details
+        """
         try:
             return self.auth_controller.logout(request)
         except exceptions.AuthException as e:
@@ -36,7 +59,14 @@ class AuthService(authservice_pb2_grpc.AuthServiceServicer):
             context.set_code(e.status_code)
             return apiservice_pb2.LogoutResponse()
 
-def serve(port, workers, service):
+def serve(port: str, workers: int, service: AuthService):
+    """Serves AuthService
+
+    Args:
+        port (str): Port/host '[::]:<PORT>'
+        workers (int): Number of threadpool workers
+        service (AuthService): AuthService instance
+    """
     logging.info(f'AuthService starting @{PORT} with {WORKERS} workers')
     server = grpc.server(futures.ThreadPoolExecutor(workers))
     authservice_pb2_grpc.add_AuthServiceServicer_to_server(service, server)
@@ -45,6 +75,9 @@ def serve(port, workers, service):
     server.wait_for_termination()
 
 if __name__ == '__main__':
+    """Entrypoint for server, collects environment details and serves
+    """
+
     # AuthService
     PORT = f"[::]:{os.getenv('PORT')}"
     WORKERS = int(os.getenv('WORKERS'))
@@ -60,7 +93,7 @@ if __name__ == '__main__':
     REDIS_PORT = os.getenv('REDIS_PORT')
     REDIS_MAX_CON = int(os.getenv('REDIS_MAX_CON'))
 
-    # Initialize DataStore, Controller, and Service
+    # Initialize DataStore, SessionStore, Controller, and Service
     data_store = DataStore(DB_HOST, DB_USER, DB_PASS, DB_NAME)
     session_store = SessionStore(REDIS_HOST, REDIS_PORT, REDIS_MAX_CON)
     auth_service = AuthService(Controller(data_store, session_store))
