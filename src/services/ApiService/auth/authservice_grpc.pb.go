@@ -3,7 +3,7 @@
 package auth
 
 import (
-	api "api"
+	api "ShortCx/api"
 	context "context"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"

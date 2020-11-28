@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package = "api;api";
+option go_package = "ShortCx/api";
 package protos;
 
 // API Service definition

@@ -3,11 +3,17 @@ PROTO_DIR=./protos
 
 # APIService
 API_PROTO=$(PROTO_DIR)/apiservice.proto
-API_OUT=./services/ApiService
+API_OUT=./services/ApiService/api
+API_AUTH_OUT=./services/ApiService/auth
 
 # AuthService
 AUTH_PROTO=$(PROTO_DIR)/authservice.proto
 AUTH_OUT=./services/AuthService/server
+
+# Go protoc options
+GO_OPT=import
+GRPC_OPT=source_relative
+
 
 # testing
 TEST_DIR=./test
@@ -16,14 +22,14 @@ AUTH_TEST_OUT=./test/test_AuthService
 
 # Generate Code for APIService
 codegen_api:
-	# APIService
-	protoc -I=$(PROTO_DIR) --go_out=$(API_OUT) --go_opt=paths=import \
-    --go-grpc_out=$(API_OUT) --go-grpc_opt=paths=import \
+	# APIService 
+	protoc -I=$(PROTO_DIR) --go_out=$(API_OUT) --go_opt=paths=source_relative \
+    --go-grpc_out=$(API_OUT) --go-grpc_opt=paths=source_relative \
     $(API_PROTO)
 
-	# AuthService (Client)
-	protoc -I=$(PROTO_DIR) --go_out=$(API_OUT) --go_opt=paths=import \
-    --go-grpc_out=$(API_OUT) --go-grpc_opt=paths=import \
+	# AuthService (Client)  --go_opt=paths=source_relative
+	protoc -I=$(PROTO_DIR) --go_out=$(API_AUTH_OUT) --go_opt=paths=source_relative \
+    --go-grpc_out=$(API_AUTH_OUT) --go-grpc_opt=paths=source_relative \
     $(AUTH_PROTO)
 	
 

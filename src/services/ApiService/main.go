@@ -5,8 +5,10 @@ import (
 	"net"
 	"os"
 
-	"github.com/rafibayer/ShortCx/api"
-	server "github.com/rafibayer/ShortCx/server"
+	"ShortCx/api"
+	auth "ShortCx/auth"
+	server "ShortCx/server"
+
 	"google.golang.org/grpc"
 )
 
@@ -21,15 +23,29 @@ func getenv(key string, fallback string) string {
 }
 
 func main() {
-	PORT := getenv("PORT", ":9090")
-	lis, err := net.Listen("tcp", "localhost"+PORT)
+
+	// Connect to AuthService
+	authAddr := getenv("AUTH_ADDR", "auth_svc:9091")
+	var opts []grpc.DialOption
+	opts = append(opts, grpc.WithInsecure())
+	opts = append(opts, grpc.WithBlock())
+	conn, err := grpc.Dial(authAddr, opts...)
 	if err != nil {
-		log.Fatalf("Failed to listen on port %s (%v)", PORT, err)
+		log.Fatalf("Failed to connect to AuthService: %v", err)
+	}
+	defer conn.Close()
+	authClient := auth.NewAuthServiceClient(conn)
+
+	// Service APIService
+	port := getenv("PORT", ":9090")
+	lis, err := net.Listen("tcp", "localhost"+port)
+	if err != nil {
+		log.Fatalf("Failed to listen on port %s (%v)", port, err)
 	}
 	s := grpc.NewServer()
-	api.RegisterAPIServiceServer(s, &server.Server{ /* Inject service addresses here later */ })
-	log.Printf("Serving on port %s ...", PORT)
+	api.RegisterAPIServiceServer(s, &server.Server{AuthClient: authClient})
+	log.Printf("Serving on port %s ...", port)
 	if err := s.Serve(lis); err != nil {
-		log.Fatalf("Failed to serve on port %s (%v)", PORT, err)
+		log.Fatalf("Failed to serve on port %s (%v)", port, err)
 	}
 }
