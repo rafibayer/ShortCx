@@ -1,23 +1,23 @@
 version: "3.8"
 services:
-  client_svc:
-    build: services/Client
-    depends_on: 
-      - proxy_svc
-    ports:
-      - "80:80"
-  proxy_svc:
-    build: services/Proxy
-    depends_on: 
-      - api_svc
-    ports:
-      - "8080:8080"
+  # client_svc:
+  #   build: services/Client
+  #   depends_on: 
+  #     - proxy_svc
+  #   ports:
+  #     - "80:80"
+  # proxy_svc:
+  #   build: services/Proxy
+  #   depends_on: 
+  #     - api_svc
+  #   ports:
+  #     - "8080:8080"
   api_svc:
     build: services/ApiService
     depends_on: 
       - auth_svc
-      - shortcut_svc
-      - user_svc
+      #- shortcut_svc
+      #- user_svc
     environment: 
       - PORT=:9090
     ports:
@@ -39,18 +39,18 @@ services:
       REDIS_MAX_CON: '10'
     ports:
       - "9091:9091"
-  shortcut_svc:
-    build: services/Shortcut
-    depends_on: 
-      - database_svc
-    ports:
-      - "9092:9092"
-  user_svc:
-    build: services/User
-    depends_on: 
-      - database_svc
-    ports:
-      - "9093:9093"
+  # shortcut_svc:
+  #   build: services/Shortcut
+  #   depends_on: 
+  #     - database_svc
+  #   ports:
+  #     - "9092:9092"
+  # user_svc:
+  #   build: services/User
+  #   depends_on: 
+  #     - database_svc
+  #   ports:
+  #     - "9093:9093"
   database_svc:
     # Connect to db: docker exec <container name> bash
     #                $ mysql -u <user> -p -h127.0.0.1

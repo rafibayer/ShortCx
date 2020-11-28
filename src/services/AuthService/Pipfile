@@ -10,6 +10,7 @@ grpcio = "*"
 grpcio-tools = "*"
 redis = "*"
 mysql-connector-python = "*"
+bcrypt = "*"
 
 [requires]
 python_version = "3.8"

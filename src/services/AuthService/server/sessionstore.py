@@ -19,10 +19,10 @@ class SessionStore:
         test.ping()
         logging.info(f'Connection Succeeded!')
 
-    def create_session(self, username):
+    def create_session(self, email):
         token = self._gen_token()
         conn = redis.Redis(connection_pool=self.pool)
-        conn.set(token, username, ex=TOKEN_LIFE_SECS)
+        conn.set(token, email, ex=TOKEN_LIFE_SECS)
         return token
 
     def end_session(self, token):

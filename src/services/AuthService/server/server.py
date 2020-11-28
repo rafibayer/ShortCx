@@ -2,8 +2,10 @@ from controller import Controller
 from datastore import DataStore
 from sessionstore import SessionStore
 from concurrent import futures
+import exceptions
 import logging
 import grpc
+import apiservice_pb2
 import authservice_pb2
 import authservice_pb2_grpc
 import os
@@ -19,10 +21,20 @@ class AuthService(authservice_pb2_grpc.AuthServiceServicer):
         self.auth_controller = auth_controller
 
     def Login(self, request, context):
-        return authservice_pb2.LoginResponse(auth_token="FAKE TOKEN")
+        try:
+            return self.auth_controller.login(request)
+        except exceptions.AuthException as e:
+            context.set_details(e.message)
+            context.set_code(e.status_code)
+            return apiservice_pb2.LoginResponse()
 
     def Logout(self, request, context):
-        return authservice_pb2.LoginResponse(success=True)
+        try:
+            return self.auth_controller.logout(request)
+        except exceptions.AuthException as e:
+            context.set_details(e.message)
+            context.set_code(e.status_code)
+            return apiservice_pb2.LogoutResponse()
 
 def serve(port, workers, service):
     logging.info(f'AuthService starting @{PORT} with {WORKERS} workers')
