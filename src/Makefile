@@ -5,6 +5,7 @@ PROTO_DIR=./protos
 API_PROTO=$(PROTO_DIR)/apiservice.proto
 API_OUT=./services/ApiService/api
 API_AUTH_OUT=./services/ApiService/auth
+API_USER_OUT=./services/ApiService/user
 
 # AuthService
 AUTH_PROTO=$(PROTO_DIR)/authservice.proto
@@ -12,12 +13,11 @@ AUTH_OUT=./services/AuthService/server
 
 # UserService
 USER_PROTO=$(PROTO_DIR)/userservice.proto
-USER_OUT=./services/UserService/Services/generated
+USER_OUT=./services/UserService
 
 # Go protoc options
 GO_OPT=import
 GRPC_OPT=source_relative
-
 
 # testing
 TEST_DIR=./test
@@ -30,8 +30,8 @@ up: codegen
 down:
 	docker-compose down
 
-codegen: codegen_api codegen_auth
-	echo "Generating all"
+codegen: codegen_api codegen_auth codegen_user
+	@echo "Generated all"
 
 # Generate Code for APIService
 codegen_api:
@@ -40,10 +40,15 @@ codegen_api:
     --go-grpc_out=$(API_OUT) --go-grpc_opt=paths=source_relative \
     $(API_PROTO)
 
-	# AuthService (Client)  --go_opt=paths=source_relative
+	# AuthService (Client)
 	protoc -I=$(PROTO_DIR) --go_out=$(API_AUTH_OUT) --go_opt=paths=source_relative \
     --go-grpc_out=$(API_AUTH_OUT) --go-grpc_opt=paths=source_relative \
     $(AUTH_PROTO)
+
+	# UserService (Client)
+	protoc -I=$(PROTO_DIR) --go_out=$(API_USER_OUT) --go_opt=paths=source_relative \
+    --go-grpc_out=$(API_USER_OUT) --go-grpc_opt=paths=source_relative \
+    $(USER_PROTO)
 	
 
 codegen_auth:
@@ -58,6 +63,11 @@ codegen_auth:
 	--python_out=$(AUTH_OUT) \
 	--grpc_python_out=$(AUTH_OUT) \
 	$(API_PROTO)
+
+# Doesn't actually generate, just copies the protos.
+# Dotnet generates at build-time
+codegen_user:
+	cp -r $(PROTO_DIR) $(USER_OUT)
 
 
 # Run all unittests (currently broken until someone answers my stackoverflow)

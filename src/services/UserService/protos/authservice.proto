@@ -1,0 +1,11 @@
+syntax = "proto3";
+import "apiservice.proto";
+option go_package = "ShortCx/auth";
+package protos;
+
+
+service AuthService {
+
+    rpc Login (LoginRequest) returns (LoginResponse) {}
+    rpc Logout (LogoutRequest) returns (LogoutResponse) {}
+}

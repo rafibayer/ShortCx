@@ -15,13 +15,22 @@ namespace User
             CreateHostBuilder(args).Build().Run();
         }
 
+        private static string Getenv(string key, string fallback) 
+        {
+            return Environment.GetEnvironmentVariable(key) ?? fallback;
+        }
+
         // Additional configuration is required to successfully run gRPC on macOS.
         // For instructions on how to configure Kestrel and gRPC clients on macOS, visit https://go.microsoft.com/fwlink/?linkid=2099682
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<Startup>();
-                });
+        public static IHostBuilder CreateHostBuilder(string[] args) {
+            string PORT = Getenv("PORT", ":9093");
+            return Host.CreateDefaultBuilder(args)
+            .ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseStartup<Startup>();
+                webBuilder.UseUrls($"https://0.0.0.0{PORT}");
+            });
+        }
+           
     }
 }

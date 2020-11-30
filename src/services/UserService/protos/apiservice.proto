@@ -1,0 +1,84 @@
+syntax = "proto3";
+option go_package = "ShortCx/api";
+option csharp_namespace = "User";
+package protos;
+
+// API Service definition
+service APIService {
+    // Create a new user
+    rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {}
+    // Login to an existing account
+    rpc Login (LoginRequest) returns (LoginResponse) {}
+    // Logout request for existing session
+    rpc Logout (LogoutRequest) returns (LogoutResponse) {}
+    // Create new shortcut
+    rpc CreateShortcut (CreateShortcutRequest) returns (CreateShortcutResponse) {}
+    // Delete existing shortcut
+    rpc DeleteShortcut (DeleteShortcutRequest) returns (DeleteShortcutResponse) {}
+    // Get url of existing shortcut
+    rpc GetShortcut (GetShortcutRequest) returns (GetShortcutResponse) {}
+}
+
+// Message to create a new user
+message CreateUserRequest {
+    string email = 1;
+    string username = 2;
+    string password = 3;
+    string password_conf = 4;
+}
+
+// New user response containing session auth
+message CreateUserResponse {
+    string auth_token = 1;
+}
+
+// Message to login
+message LoginRequest {
+    string email = 1;
+    string password = 2;
+}
+
+// Login response containing session auth
+message LoginResponse {
+    string auth_token = 1;
+}
+
+// Logout request
+message LogoutRequest {
+    string auth_token = 1;
+}
+
+// Logout response
+message LogoutResponse {
+    bool success = 1;
+}
+
+message CreateShortcutRequest {
+    string auth_token = 1;
+    string target_url = 2;
+}
+
+message CreateShortcutResponse {
+    string url_token = 1;
+    // url too?
+}
+
+message DeleteShortcutRequest {
+    string auth_token = 1;
+    string url_token = 2;
+}
+
+message DeleteShortcutResponse {
+    bool success = 1;
+}
+
+message GetShortcutRequest {
+    string url_token = 1;
+}
+
+message GetShortcutResponse {
+    string target_url = 1;
+}
+
+
+

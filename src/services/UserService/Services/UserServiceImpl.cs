@@ -17,12 +17,12 @@ namespace User
             _logger = logger;
         }
 
-        public override Task<CreateUserResponse> CreateUser(CreateUserRequest request, ServerCallContext context) 
+        public override Task<InternalCreateUserResponse> CreateUser(CreateUserRequest request, ServerCallContext context) 
         {
             Console.WriteLine($"Recieved CreateUserRequest {request.ToString()}");
-            return Task.FromResult(new CreateUserResponse
+            return Task.FromResult(new InternalCreateUserResponse
             {
-                AuthToken = "USER SERVICE UNIMPLEMENTED"
+                Success = true
             });
         }
     }

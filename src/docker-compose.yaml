@@ -29,7 +29,7 @@ services:
       - database_svc
       - session_svc
     environment: 
-      PORT: '9091'
+      PORT: ':9091'
       WORKERS: '3'
       DB_HOST: 'database_svc'
       DB_USER: 'root'
@@ -42,10 +42,16 @@ services:
   #   build: services/Shortcut
   #   depends_on: 
   #     - database_svc
-  # user_svc:
-  #   build: services/User
-  #   depends_on: 
-  #     - database_svc
+  user_svc:
+    build: services/User
+    depends_on: 
+      - database_svc
+    environment: 
+      PORT: '9093'
+      DB_HOST: 'database_svc'
+      DB_USER: 'root'
+      DB_PASS: 'password'
+      DB_NAME: 'db'
   database_svc:
     # Connect to db: docker exec <container name> bash
     #                $ mysql -u <user> -p -h127.0.0.1

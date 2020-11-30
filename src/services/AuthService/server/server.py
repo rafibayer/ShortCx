@@ -79,7 +79,7 @@ if __name__ == '__main__':
     """
 
     # AuthService
-    PORT = f"[::]:{os.getenv('PORT')}"
+    PORT = f"[::]{os.getenv('PORT')}"
     WORKERS = int(os.getenv('WORKERS'))
 
     # DataStore access
