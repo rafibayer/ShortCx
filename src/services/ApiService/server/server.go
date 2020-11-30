@@ -1,17 +1,18 @@
 package server
 
 import (
-	"context"
-
 	api "ShortCx/api"
 	auth "ShortCx/auth"
+	"context"
+
+	"google.golang.org/grpc/status"
 )
 
 // Server implements APIService gRPC service
 type Server struct {
 	api.UnimplementedAPIServiceServer
 	AuthClient auth.AuthServiceClient
-	// More fields for other service clients (stubs/addresses/connections idk)
+	// More fields for other service clients
 }
 
 // CreateUser handles CreateUser requests, passing them to UserService
@@ -21,12 +22,24 @@ func (s *Server) CreateUser(ctx context.Context, request *api.CreateUserRequest)
 
 // Login handles Login requests, passing them to AuthService
 func (s *Server) Login(ctx context.Context, request *api.LoginRequest) (*api.LoginResponse, error) {
-	return &api.LoginResponse{AuthToken: "UNIMPLEMENTED AUTH"}, nil
+	resp, err := s.AuthClient.Login(context.Background(), request)
+	if err != nil {
+		// If there is an error from a downstream service, propagate it up
+		errStatus, _ := status.FromError(err)
+		return nil, status.Errorf(errStatus.Code(), errStatus.Message())
+	}
+	return resp, nil
 }
 
 // Logout handles Logout requests, passing them to AuthService
 func (s *Server) Logout(ctx context.Context, request *api.LogoutRequest) (*api.LogoutResponse, error) {
-	return &api.LogoutResponse{Success: true}, nil
+	resp, err := s.AuthClient.Logout(context.Background(), request)
+	if err != nil {
+		// If there is an error from a downstream service, propagate it up
+		errStatus, _ := status.FromError(err)
+		return nil, status.Errorf(errStatus.Code(), errStatus.Message())
+	}
+	return resp, nil
 }
 
 // CreateShortcut handles CreateShortcut requests, passing them to ShortcutService

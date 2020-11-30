@@ -20,6 +20,7 @@ services:
       #- user_svc
     environment: 
       - PORT=:9090
+      - AUTH_ADDR=auth_svc:9091
     ports:
       - "9090:9090"
   auth_svc:

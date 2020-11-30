@@ -20,6 +20,12 @@ TEST_DIR=./test
 API_TEST_OUT=./test/test_ApiService
 AUTH_TEST_OUT=./test/test_AuthService
 
+up: codegen
+	docker-compose up -d --build
+
+down:
+	docker-compose down
+
 codegen: codegen_api codegen_auth
 	echo "Generating all"
 
