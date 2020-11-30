@@ -9,7 +9,7 @@
     <PackageReference Include="Grpc.Tools" Version="2.26.0" />
   </ItemGroup>
   <ItemGroup>
-    <Protobuf Include="..\..\protos\apiservice.proto" AdditionalImportDirs="..\..\protos" Link="Protos\apiservice.proto" />
-    <Protobuf Include="..\..\protos\userservice.proto" AdditionalImportDirs="..\..\protos" Link="Protos\userservice.proto" />
+    <Protobuf Include="protos_copy\apiservice.proto" AdditionalImportDirs="protos_copy" Link="Protos\apiservice.proto" />
+    <Protobuf Include="protos_copy\userservice.proto" AdditionalImportDirs="protos_copy" Link="Protos\userservice.proto" />
   </ItemGroup>
 </Project>
