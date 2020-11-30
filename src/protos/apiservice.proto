@@ -1,5 +1,6 @@
 syntax = "proto3";
 option go_package = "ShortCx/api";
+option csharp_namespace = "User";
 package protos;
 
 // API Service definition

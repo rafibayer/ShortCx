@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+  <!-- Package dependencies -->
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.24.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.14.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.26.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Protobuf Include="..\..\protos\apiservice.proto" AdditionalImportDirs="..\..\protos" Link="Protos\apiservice.proto" />
+    <Protobuf Include="..\..\protos\userservice.proto" AdditionalImportDirs="..\..\protos" Link="Protos\userservice.proto" />
+  </ItemGroup>
+</Project>

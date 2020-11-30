@@ -10,6 +10,10 @@ API_AUTH_OUT=./services/ApiService/auth
 AUTH_PROTO=$(PROTO_DIR)/authservice.proto
 AUTH_OUT=./services/AuthService/server
 
+# UserService
+USER_PROTO=$(PROTO_DIR)/userservice.proto
+USER_OUT=./services/UserService/Services/generated
+
 # Go protoc options
 GO_OPT=import
 GRPC_OPT=source_relative
@@ -43,7 +47,7 @@ codegen_api:
 	
 
 codegen_auth:
-	#AuthService
+	# AuthService
 	python -m grpc_tools.protoc -I=$(PROTO_DIR) \
 	--python_out=$(AUTH_OUT) \
 	--grpc_python_out=$(AUTH_OUT) \
@@ -54,6 +58,7 @@ codegen_auth:
 	--python_out=$(AUTH_OUT) \
 	--grpc_python_out=$(AUTH_OUT) \
 	$(API_PROTO)
+
 
 # Run all unittests (currently broken until someone answers my stackoverflow)
 # in the meantime, test files can be run manually
@@ -69,3 +74,26 @@ build_test:
 	python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(AUTH_TEST_OUT) --grpc_python_out=$(AUTH_TEST_OUT) $(AUTH_PROTO)
 	python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(AUTH_TEST_OUT) --grpc_python_out=$(AUTH_TEST_OUT) $(API_PROTO)
 
+# Use me for suggestions when things aren't working
+dammit: damn_go damn_cs damn_py
+	@echo "====== All ======"
+	@echo "Are you using the right shell?"
+	@echo "Have you restarted vscode?"
+	@echo "Have you regenerated code?"
+
+damn_go:
+	@echo "====== Go ======"
+	@echo "check GO111MODULE"
+	@echo "check go.mod module name, and import <modulename>/package"
+	@echo "restart and update go tools... gopls"
+
+damn_cs:
+	@echo "====== C# ======"
+	@echo "restart Omnisharp (ctrl + shift + p > restart omni...)"
+	@echo "dotnet restore"
+	@echo "dotnet build"
+
+damn_py:
+	@echo "====== Python ======"
+	@echo "relative imports?"
+	@echo "__init__.py?"
