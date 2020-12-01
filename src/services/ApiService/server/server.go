@@ -1,9 +1,9 @@
 package server
 
 import (
-	api "ShortCx/api"
-	auth "ShortCx/auth"
-	user "ShortCx/user"
+	"ShortCx/api"
+	"ShortCx/auth"
+	"ShortCx/user"
 	"context"
 
 	"google.golang.org/grpc/codes"

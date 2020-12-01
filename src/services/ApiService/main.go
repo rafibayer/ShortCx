@@ -6,9 +6,9 @@ import (
 	"os"
 
 	"ShortCx/api"
-	auth "ShortCx/auth"
-	server "ShortCx/server"
-	user "ShortCx/user"
+	"ShortCx/auth"
+	"ShortCx/server"
+	"ShortCx/user"
 
 	"google.golang.org/grpc"
 )
@@ -39,14 +39,19 @@ func dialService(addr string) *grpc.ClientConn {
 func main() {
 
 	// Connect to AuthService
+	log.Println("Trying to connect to AuthService...")
 	authAddr := getenv("AUTH_ADDR", "auth_svc:9091")
 	authClient := auth.NewAuthServiceClient(dialService(authAddr))
+	log.Println("Done!")
 
 	// Connect to UserService
+	log.Println("Trying to connect to UserService...")
 	userAddr := getenv("USER_ADDR", "user_svc:9093")
 	userClient := user.NewUserServiceClient(dialService(userAddr))
+	log.Println("Done!")
 
 	// Server listener
+	log.Println("Trying to serve APIService...")
 	port := getenv("PORT", ":9090")
 	lis, err := net.Listen("tcp", "0.0.0.0"+port)
 	if err != nil {

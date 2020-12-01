@@ -21,6 +21,7 @@ services:
     environment: 
       - PORT=:9090
       - AUTH_ADDR=auth_svc:9091
+      - USER_ADDR=user_svc:9093
     ports:
       - "9090:9090"
   auth_svc:
@@ -46,6 +47,8 @@ services:
     build: services/UserService
     depends_on: 
       - database_svc
+    ports: 
+      - "9093:9093"
     environment: 
       PORT: '9093'
       DB_HOST: 'database_svc'
