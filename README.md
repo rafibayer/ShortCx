@@ -1,5 +1,10 @@
 # ShortCx
-Microservice based URL shortener using gRPC
+Polygot Microservice-based URL shortener using gRPC.
+
+API Gateway: Go  
+Authorization Service: Python  
+User Management Service: C#  
+Shortcut Management Service: TBD  
 
 ## Architecture
 ### Services
