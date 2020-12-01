@@ -8,7 +8,6 @@ RUN dotnet restore
 # Copy everything else and build
 # need to find a way to copy protos into context
 COPY . ./
-ADD ../../protos ./protos
 RUN dotnet publish -c Release -o out
 
 # Build runtime image

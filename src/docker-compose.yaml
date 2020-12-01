@@ -43,7 +43,7 @@ services:
   #   depends_on: 
   #     - database_svc
   user_svc:
-    build: services/User
+    build: services/UserService
     depends_on: 
       - database_svc
     environment: 
