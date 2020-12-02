@@ -1,6 +1,7 @@
 import bcrypt
 import exceptions
 import apiservice_pb2
+import logging
 
 # String encoding to convert between str and bytes
 STR_ENCODING = 'utf-8'
@@ -62,6 +63,4 @@ class Controller:
             return False
 
         given = bytes(password, encoding=STR_ENCODING)
-        return bcrpyt.checkpw(given, expected)
-        
-
+        return bcrypt.checkpw(given, expected)

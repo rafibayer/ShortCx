@@ -30,6 +30,11 @@ up: codegen
 	docker-compose up -d --build
 	@echo "====== Done! ======"
 
+upng:
+	@echo "====== Starting Services (no codegen) ======"
+	docker-compose up -d --build
+	@echo "====== Done! ======"
+
 up_nobuild:
 	@echo "====== Starting Services (no build / no codegen) ======"
 	docker-compose up -d
@@ -40,7 +45,7 @@ down:
 	docker-compose down
 	@echo "====== Done! ======"
 
-codegen: codegen_api codegen_auth codegen_user
+codegen: codegen_api codegen_auth codegen_user build_test
 	@echo "====== Generated All ======"
 
 # Generate Code for APIService

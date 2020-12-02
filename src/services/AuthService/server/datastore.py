@@ -33,14 +33,16 @@ class DataStore:
         Returns:
             str: passhash associated with given username
         """
+        logging.info(f"Connection alive: {self.database.is_connected()}")
         select = self.database.cursor()
         sel_sql = 'SELECT passhash FROM users WHERE username=%s'
         select.execute(sel_sql, (username, ))
         result = select.fetchone()
+        logging.info(f"Passhash for {username} = {result}")
         if result is None:
             raise exceptions.BadCredentialsError()
         
-        return result
+        return result[0]
 
     def _connect_with_retries(self, db_host, db_user, db_pass, db_name):
         """Connect to the database with retries
