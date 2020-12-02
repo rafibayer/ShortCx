@@ -18,6 +18,10 @@ class Controller:
         self.datastore = datastore
         self.sessionstore = sessionstore
 
+    def get_session(self, getSessionRequest: apiservice_pb2.GetSessionRequest) -> apiservice_pb2.GetSessionResponse:
+        user = self.sessionstore.get_state(getSessionRequest.auth_token)
+        return apiservice_pb2.GetSessionResponse(username=user)
+
     def login(self, loginRequest: apiservice_pb2.LoginRequest) -> apiservice_pb2.LoginResponse:
         """Handles a login request
 

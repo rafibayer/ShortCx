@@ -6,6 +6,7 @@ package protos;
 
 service AuthService {
 
+    rpc GetSession (GetSessionRequest) returns (GetSessionResponse) {}
     rpc Login (LoginRequest) returns (LoginResponse) {}
     rpc Logout (LogoutRequest) returns (LogoutResponse) {}
 }

@@ -11,6 +11,9 @@ namespace User
         private const int RETRY_DELAY_SEC = 5;
         private const int MAX_RETRIES = 12;
 
+        /// <summary>
+        /// Create a new MySqlDataRepository from Environment variables
+        /// </summary>
         public MySqlUserDataRepository()
         {
              // Get enviornment variables
@@ -26,11 +29,20 @@ namespace User
             _connection = ConnectWithRetries(connStr);
         }
 
+        /// <summary>
+        /// Get the currently active connection
+        /// </summary>
+        /// <returns>MySqlConnection</returns>
         public MySqlConnection GetConnection()
         {
             return _connection;
         }
 
+        /// <summary>
+        /// Connect to the database with retries
+        /// </summary>
+        /// <param name="connStr">MySqlConnection string</param>
+        /// <returns>MySqlConnection</returns>
         private MySqlConnection ConnectWithRetries(string connStr)
         {
             MySqlConnection conn = new MySqlConnection(connStr);

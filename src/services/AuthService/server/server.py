@@ -25,6 +25,14 @@ class AuthService(authservice_pb2_grpc.AuthServiceServicer):
         super().__init__()
         self.auth_controller = auth_controller
 
+    def GetSession(self, request: apiservice_pb2.GetSessionRequest, context: grpc.RpcContext) -> apiservice_pb2.GetSessionResponse:
+        try:
+            return self.auth_controller.get_session(request)
+        except exceptions.AuthException as e:
+            context.set_details(e.message)
+            context.set_code(e.status_code)
+            return apiservice_pb2.GetSessionResponse()
+
     def Login(self, request: apiservice_pb2.LoginRequest, context: grpc.RpcContext) -> apiservice_pb2.LoginResponse:
         """Handles Login RPC
 

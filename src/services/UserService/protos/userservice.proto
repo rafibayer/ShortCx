@@ -9,5 +9,5 @@ service UserService {
 }
 
 message InternalCreateUserResponse {
-    bool success = 1;
+    string created = 1;
 }

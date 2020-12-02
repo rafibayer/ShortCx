@@ -13,19 +13,34 @@ namespace User
     {
         private IUserDataRepository _repository;
        
+        /// <summary>
+        /// Username and password validation parameters
+        /// </summary>
         private const int MIN_USERNAME_LENGTH = 4;
         private const int MAX_USERNAME_LENGTH = 20;
         private const int MIN_PASSWORD_LENGTH = 8;
         private const int MAX_PASSWORD_LENGTH = 50;
 
+        /// <summary>
+        /// Create a new UserController
+        /// </summary>
+        /// <param name="repository">Data Access</param>
         public UserController(IUserDataRepository repository)
         {
             _repository = repository;
         }
 
-        public void CreateUser(string username, string password, string passwordConf)
+        /// <summary>
+        /// Validates and inserts a new user into the database
+        /// </summary>
+        /// <param name="username">New username (unsanitized)</param>
+        /// <param name="password">New password</param>
+        /// <param name="passwordConf">New password confirmation</param>
+        /// <returns>Created user's username after sanitization</returns>
+        /// <exception cref="UserException.UserException">Thrown if username or password is invalid</exception>
+        public string CreateUser(string username, string password, string passwordConf)
         {
-
+            username = SanitizeUsername(username);
             MySqlConnection conn = _repository.GetConnection();
             ValidateUser(username, password, passwordConf);
             string passHash = bc.HashPassword(password);
@@ -36,8 +51,14 @@ namespace User
             cmd.Parameters.AddWithValue("@passhash", passHash);
 
             cmd.ExecuteNonQuery();
+            return username;
         }
 
+        /// <summary>
+        /// Queries database to check if username is available
+        /// </summary>
+        /// <param name="username">New username</param>
+        /// <returns>true if available</returns>
         private bool UsernameAvailable(string username)
         {
             MySqlConnection conn = _repository.GetConnection();
@@ -49,6 +70,23 @@ namespace User
             return Convert.ToInt32(result) == 0;
         }
 
+        /// <summary>
+        /// Sanitizes username
+        /// </summary>
+        /// <param name="username">New username</param>
+        /// <returns>Sanitized username</returns>
+        private string SanitizeUsername(string username)
+        {
+            return username.Trim();
+        }
+
+        /// <summary>
+        /// Validates username and password
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="passwordConf"></param>
+        /// <exception cref="UserException.UserException">Thrown if username or password is invalid</exception>
         private void ValidateUser(string username, string password, string passwordConf)
         {
             if (username.Length > MAX_USERNAME_LENGTH)

@@ -7,6 +7,8 @@ package protos;
 service APIService {
     // Create a new user
     rpc CreateUser (CreateUserRequest) returns (CreateUserResponse) {}
+    // Gets existing session state
+    rpc GetSession (GetSessionRequest) returns (GetSessionResponse) {}
     // Login to an existing account
     rpc Login (LoginRequest) returns (LoginResponse) {}
     // Logout request for existing session
@@ -24,6 +26,14 @@ message CreateUserRequest {
     string username = 1;
     string password = 2;
     string password_conf = 3;
+}
+
+message GetSessionRequest {
+    string auth_token = 1;
+}
+
+message GetSessionResponse {
+    string username = 1;
 }
 
 // New user response containing session auth

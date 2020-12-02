@@ -6,7 +6,6 @@ import (
 	"ShortCx/user"
 	"context"
 
-	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
@@ -25,19 +24,27 @@ func (s *Server) CreateUser(ctx context.Context, request *api.CreateUserRequest)
 		errStatus, _ := status.FromError(err)
 		return nil, status.Errorf(errStatus.Code(), errStatus.Message())
 	}
+
 	// If user creation succeeded, make a session for the new user
-	if internalCreateResp.Success {
-		loginRequest := &api.LoginRequest{Username: request.Username, Password: request.Password}
-		loginResponse, err := s.Login(context.Background(), loginRequest)
-		if err != nil {
-			errStatus, _ := status.FromError(err)
-			return nil, status.Errorf(errStatus.Code(), errStatus.Message())
-		}
-		return &api.CreateUserResponse{AuthToken: loginResponse.AuthToken}, nil
+	loginRequest := &api.LoginRequest{Username: internalCreateResp.Created, Password: request.Password}
+	loginResponse, err := s.Login(context.Background(), loginRequest)
+	if err != nil {
+		errStatus, _ := status.FromError(err)
+		return nil, status.Errorf(errStatus.Code(), errStatus.Message())
 	}
+	return &api.CreateUserResponse{AuthToken: loginResponse.AuthToken}, nil
 
-	return nil, status.Error(codes.Unknown, "User or Session creation failed for an unknown reason")
+}
 
+// GetSession handles GetSession requests, passing them to AuthService
+func (s *Server) GetSession(ctx context.Context, request *api.GetSessionRequest) (*api.GetSessionResponse, error) {
+	resp, err := s.AuthClient.GetSession(context.Background(), request)
+	if err != nil {
+		// If there is an error from a downstream service, propagate it up
+		errStatus, _ := status.FromError(err)
+		return nil, status.Errorf(errStatus.Code(), errStatus.Message())
+	}
+	return resp, nil
 }
 
 // Login handles Login requests, passing them to AuthService

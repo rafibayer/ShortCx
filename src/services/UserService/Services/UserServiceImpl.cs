@@ -13,23 +13,32 @@ namespace User
         private readonly IUserDataRepository _repository;
         private readonly UserController _controller;
 
-        // Add data-access info to this constructor?
+        /// <summary>
+        /// gRPC UserService Implementation
+        /// </summary>
+        /// <param name="logger">ILogger</param>
+        /// <param name="repository">IUserDataRepository Implementation</param>
         public UserServiceImpl(ILogger<UserServiceImpl> logger, IUserDataRepository repository)
         {
             _logger = logger;
             _repository = repository;
-
             _controller = new UserController(repository);
         }
 
+        /// <summary>
+        /// UserService CreateUser rpc Implementation
+        /// </summary>
+        /// <param name="request">UserCreationRequest</param>
+        /// <param name="context">gRPC call context</param>
+        /// <returns>InteralCreateUserResponse for APIService</returns>
         public override Task<InternalCreateUserResponse> CreateUser(CreateUserRequest request, ServerCallContext context) 
         {
             try
             {
-                _controller.CreateUser(request.Username, request.Password, request.PasswordConf);
+                string created = _controller.CreateUser(request.Username, request.Password, request.PasswordConf);
                 return Task.FromResult(new InternalCreateUserResponse
                 {
-                    Success = true
+                    Created = created
                 });
             }
             catch (UserException.UserException e)

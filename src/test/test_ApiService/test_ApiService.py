@@ -31,6 +31,12 @@ class TestApiService(unittest.TestCase):
         resp = self.stub.CreateUser(request)
         self.tokens.add(resp.auth_token)
 
+    def test_GetSession(self):
+        request = apiservice_pb2.GetSessionRequest(
+            auth_token = next(iter(self.tokens)))
+
+        resp = self.stub.GetSession(request)
+
     def test_Login(self):
         request = apiservice_pb2.LoginRequest(
             username=self.username,
