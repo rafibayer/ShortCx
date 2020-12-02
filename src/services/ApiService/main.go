@@ -32,7 +32,6 @@ func dialService(addr string) *grpc.ClientConn {
 	if err != nil {
 		log.Fatalf("Failed to connect to Service at %s: %v", addr, err)
 	}
-	defer conn.Close()
 	return conn
 }
 

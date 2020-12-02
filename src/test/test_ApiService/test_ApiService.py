@@ -23,8 +23,7 @@ class TestApiService(unittest.TestCase):
             password_conf="testpassword")
 
         # print("calling create")
-        resp = self.stub.CreateUser(request)
-
+        self.assertRaises(grpc.RpcError, self.stub.CreateUser, request)
 
     def test_Login(self):
         request = apiservice_pb2.LoginRequest(

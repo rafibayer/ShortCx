@@ -60,7 +60,6 @@ services:
     #                $ mysql -u <user> -p -h127.0.0.1
     #                $ <password>
     #command: "--socket=/tmp/mysql.sock" # something to do with windows idk
-
     image: mysql
     volumes: 
       - ./_test_db_data:/var/lib/mysql
