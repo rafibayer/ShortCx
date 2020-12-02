@@ -15,42 +15,36 @@ class TestApiService(unittest.TestCase):
         # print("establishing stub")
         channel = grpc.insecure_channel(target=SERVICE_ADDR)
         cls.stub = apiservice_pb2_grpc.APIServiceStub(channel)
-        # print("done")
+        cls.username = cls._randname()
+        cls.tokens = set()
 
-    def _randname(self):
+    @staticmethod
+    def _randname():
         return ''.join(random.choice(string.ascii_lowercase) for _ in range(8))
-
 
     def test_CreateUser(self):
         request = apiservice_pb2.CreateUserRequest(
-            username=self._randname(),
+            username=self.username,
             password="testpassword",
             password_conf="testpassword")
 
-        print(request)
-
-        # print("calling create")
         resp = self.stub.CreateUser(request)
-        print(resp)
-        #self.assertRaises(grpc.RpcError, self.stub.CreateUser, request)
+        self.tokens.append(resp.auth_token)
 
-    # def test_Login(self):
-    #     request = apiservice_pb2.LoginRequest(
-    #         username="wbanhrzp",
-    #         password="testpassword")
+    def test_Login(self):
+        request = apiservice_pb2.LoginRequest(
+            username=self.username,
+            password="testpassword")
         
-    #     # print("calling login")
-    #     resp = self.stub.Login(request)
-    #     print(resp)
-    #     # self.assertRaises(grpc.RpcError, self.stub.Login, request)
+        resp = self.stub.Login(request)
+        self.tokens.append(resp.auth_token)
 
-
-    # def test_Logout(self):
-    #     request = apiservice_pb2.LogoutRequest(
-    #         auth_token="FAKE TOKEN")
-        
-    #     # print("calling logout")
-        # self.assertRaises(grpc.RpcError, self.stub.Logout, request)
+    def test_Logout(self):
+        for token in self.tokens:
+            request = apiservice_pb2.LogoutRequest(
+                auth_token=token)
+            
+            self.stub.Logout(request)
 
     # def test_CreateShortcut(self):
     #     request = apiservice_pb2.CreateShortcutRequest(

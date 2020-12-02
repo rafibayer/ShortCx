@@ -30,8 +30,8 @@ namespace User
 
         public void CreateUser(string username, string password, string passwordConf)
         {
-            ValidateUser(username, password, passwordConf);
 
+            ValidateUser(username, password, passwordConf);
             string passHash = bc.HashPassword(password);
 
             string sql = "INSERT INTO users (username, created_at, passhash) VALUES(@username, NOW(), @passhash)";
@@ -40,7 +40,7 @@ namespace User
             cmd.Parameters.AddWithValue("@passhash", passHash);
 
             cmd.ExecuteNonQuery();
-            Console.WriteLine($"Inserting passhash for user {username} = {passHash}");
+            conn.Close();
         }
 
         private bool UsernameAvailable(string username)

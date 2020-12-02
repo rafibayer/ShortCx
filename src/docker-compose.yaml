@@ -31,7 +31,7 @@ services:
       - session_svc
     environment: 
       PORT: ':9091'
-      WORKERS: '3'
+      WORKERS: '1'
       DB_HOST: 'database_svc'
       DB_USER: 'root'
       DB_PASS: 'root'
@@ -68,6 +68,8 @@ services:
     environment: 
       MYSQL_ROOT_PASSWORD: 'root' # TODO: load these from ignored .env file
       MYSQL_DATABASE: 'db'
+    cap_add:
+      - SYS_NICE  # More magic
   session_svc:
     image: redis
       
