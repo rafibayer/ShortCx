@@ -21,24 +21,21 @@ class DataStore:
         logging.info(f'Tying to connect to db: {db_user}@{db_host}:{db_pass} ({db_name=})')
         self._connect_with_retries(db_host, db_user, db_pass, db_name)
 
-        logging.info('Attempting to initialize users table')
-        self._db_init()
-
-    def get_credentials(self, email: str) -> str:
-        """Get credentials for a given email
+    def get_credentials(self, username: str) -> str:
+        """Get credentials for a given username
 
         Args:
-            email (str): User email
+            username (str): Username
 
         Raises:
-            exceptions.BadCredentialsError: User/email not found
+            exceptions.BadCredentialsError: User not found
 
         Returns:
-            str: passhash associated with given email
+            str: passhash associated with given username
         """
         select = self.database.cursor()
-        sel_sql = 'SELECT passhash FROM users WHERE email=%s'
-        select.execute(sel_sql, (email, ))
+        sel_sql = 'SELECT passhash FROM users WHERE username=%s'
+        select.execute(sel_sql, (username, ))
         result = select.fetchone()
         if result is None:
             raise exceptions.BadCredentialsError()
@@ -75,22 +72,6 @@ class DataStore:
 
         logging.CRITICAL(f'DB failed to connect after {MAX_RETRIES} attempts ...')
         raise ConnectionError()
-
-    def _db_init(self):
-        """Initializes all required tables for DataStore
-        """
-        create = self.database.cursor()
-        create_sql = """
-        CREATE TABLE IF NOT EXISTS users (
-            user_id INT AUTO_INCREMENT PRIMARY KEY,
-            email VARCHAR(255) NOT NULL UNIQUE,
-            username VARCHAR(255) NOT NULL UNIQUE,
-            created_at DATE NOT NULL,
-            passhash VARCHAR(255) NOT NULL
-        );
-        """
-        create.execute(create_sql)
-        self.database.commit()
         
 
         

@@ -15,7 +15,7 @@ class TestApiService(unittest.TestCase):
         cls.stub = authservice_pb2_grpc.AuthServiceStub(channel)
 
     def test_BadLogin(self):
-        request = apiservice_pb2.LoginRequest(email="fake@example.com", password="fakepassword")
+        request = apiservice_pb2.LoginRequest(username="fakeuser", password="fakepassword")
         try:
             resp = self.stub.Login(request)
         except grpc.RpcError as e:

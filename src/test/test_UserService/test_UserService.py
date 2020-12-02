@@ -17,7 +17,6 @@ class TestUserService(unittest.TestCase):
 
     def test_CreateUser(self):
         request = apiservice_pb2.CreateUserRequest(
-            email = "fake@example.com",
             username = "fakeuser",
             password = "fakepassword",
             password_conf = "fakepassword"

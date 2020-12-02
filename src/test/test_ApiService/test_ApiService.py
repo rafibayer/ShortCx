@@ -18,7 +18,6 @@ class TestApiService(unittest.TestCase):
 
     def test_CreateUser(self):
         request = apiservice_pb2.CreateUserRequest(
-            email="test@example.com",
             username="testuser",
             password="testpassword",
             password_conf="testpassword")
@@ -29,7 +28,6 @@ class TestApiService(unittest.TestCase):
 
     def test_Login(self):
         request = apiservice_pb2.LoginRequest(
-            email="test@example.com",
             password="testpassword")
         
         # print("calling login")

@@ -34,7 +34,7 @@ services:
       WORKERS: '3'
       DB_HOST: 'database_svc'
       DB_USER: 'root'
-      DB_PASS: 'password'
+      DB_PASS: 'root'
       DB_NAME: 'db'
       REDIS_HOST: 'session_svc'
       REDIS_PORT: '6379'
@@ -53,21 +53,21 @@ services:
       PORT: '9093'
       DB_HOST: 'database_svc'
       DB_USER: 'root'
-      DB_PASS: 'password'
+      DB_PASS: 'root'
       DB_NAME: 'db'
   database_svc:
     # Connect to db: docker exec <container name> bash
     #                $ mysql -u <user> -p -h127.0.0.1
     #                $ <password>
-    image: mysql/mysql-server:latest
-    command: "--socket=/tmp/mysql.sock" # something to do with windows idk
+    #command: "--socket=/tmp/mysql.sock" # something to do with windows idk
+
+    image: mysql
     volumes: 
       - ./_test_db_data:/var/lib/mysql
+      - ./database/initialization:/docker-entrypoint-initdb.d
     environment: 
-      MYSQL_ROOT_PASSWORD: 'password' # TODO: load these from ignored .env file
+      MYSQL_ROOT_PASSWORD: 'root' # TODO: load these from ignored .env file
       MYSQL_DATABASE: 'db'
-      MYSQL_USER: 'root'
-      MYSQL_PASSWORD: 'password'
   session_svc:
     image: redis
       

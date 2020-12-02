@@ -29,8 +29,8 @@ class Controller:
         Returns:
             LoginResponse: response containing auth_token or error details
         """
-        if self.authenticate(loginRequest.email, loginRequest.password):
-            token = self.sessionstore.create_session(loginRequest.email)
+        if self.authenticate(loginRequest.username, loginRequest.password):
+            token = self.sessionstore.create_session(loginRequest.username)
             return apiservice_pb2.LoginResponse(auth_token=token)
         raise exceptions.BadCredentialsError()
 
@@ -46,18 +46,18 @@ class Controller:
         self.sessionstore.end_session(logoutRequest.auth_token)
         return apiservice_pb2.LogoutResponse(success=True)
 
-    def authenticate(self, email: str, password: str) -> bool:
-        """Authenticates a given email + password
+    def authenticate(self, username: str, password: str) -> bool:
+        """Authenticates a given username + password
 
         Args:
-            email (str): Entered password
+            username (str): Entered username
             password (str): Entered password
 
         Returns:
             bool: True if valid, false otherwise
         """
         try:
-            expected = bytes(self.datastore.get_credentials(email), encoding=STR_ENCODING)
+            expected = bytes(self.datastore.get_credentials(username), encoding=STR_ENCODING)
         except exceptions.AuthException:
             return False
 

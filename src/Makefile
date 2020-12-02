@@ -26,16 +26,26 @@ AUTH_TEST_OUT=./test/test_AuthService
 USER_TEST_OUT=./test/test_UserService
 
 up: codegen
+	@echo "====== Starting Services ======"
 	docker-compose up -d --build
+	@echo "====== Done! ======"
+
+up_nobuild:
+	@echo "====== Starting Services (no build / no codegen) ======"
+	docker-compose up -d
+	@echo "====== Done! ======"
 
 down:
+	@echo "====== Stopping Services ======"
 	docker-compose down
+	@echo "====== Done! ======"
 
 codegen: codegen_api codegen_auth codegen_user
-	@echo "Generated all"
+	@echo "====== Generated All ======"
 
 # Generate Code for APIService
 codegen_api:
+	@echo "====== Generating APIService ======"
 	# APIService 
 	protoc -I=$(PROTO_DIR) --go_out=$(API_OUT) --go_opt=paths=source_relative \
     --go-grpc_out=$(API_OUT) --go-grpc_opt=paths=source_relative \
@@ -53,6 +63,7 @@ codegen_api:
 	
 
 codegen_auth:
+	@echo "====== Generating AuthService ======"
 	# AuthService
 	python -m grpc_tools.protoc -I=$(PROTO_DIR) \
 	--python_out=$(AUTH_OUT) \
@@ -68,16 +79,19 @@ codegen_auth:
 # Doesn't actually generate, just copies the protos.
 # Dotnet generates at build-time
 codegen_user:
+	@echo "====== Copying protos to UserService ======"
 	cp -r $(PROTO_DIR) $(USER_OUT)
 
 
 # Run all unittests (currently broken until someone answers my stackoverflow)
 # in the meantime, test files can be run manually
 test: build_test
+	@echo "====== Running Tests ======"
 	python -m unittest discover $(TEST_DIR)
 
 # Generate all code needed for test clients
 build_test:
+	@echo "====== Generating Tests ======"
 	# APIService
 	python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(API_TEST_OUT) --grpc_python_out=$(API_TEST_OUT) $(API_PROTO)
 
