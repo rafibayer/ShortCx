@@ -5,7 +5,6 @@ import (
 	"ShortCx/auth"
 	"ShortCx/user"
 	"context"
-	"log"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -21,7 +20,6 @@ type Server struct {
 
 // CreateUser handles CreateUser requests, passing them to UserService
 func (s *Server) CreateUser(ctx context.Context, request *api.CreateUserRequest) (*api.CreateUserResponse, error) {
-	log.Printf("Got CreateUser Request: %v", request)
 	internalCreateResp, err := s.UserClient.CreateUser(context.Background(), request)
 	if err != nil {
 		errStatus, _ := status.FromError(err)
@@ -30,10 +28,8 @@ func (s *Server) CreateUser(ctx context.Context, request *api.CreateUserRequest)
 	// If user creation succeeded, make a session for the new user
 	if internalCreateResp.Success {
 		loginRequest := &api.LoginRequest{Username: request.Username, Password: request.Password}
-		log.Printf("Trying to log in: %v", loginRequest)
 		loginResponse, err := s.Login(context.Background(), loginRequest)
 		if err != nil {
-			log.Printf("Error logging in: %v", err)
 			errStatus, _ := status.FromError(err)
 			return nil, status.Errorf(errStatus.Code(), errStatus.Message())
 		}

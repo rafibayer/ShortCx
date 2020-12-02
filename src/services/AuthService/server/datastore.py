@@ -19,10 +19,6 @@ class DataStore:
             db_name (str): Database db name
         """
         logging.info(f'Tying to connect to db: {db_user}@{db_host}:{db_pass} ({db_name=})')
-        self.db_user = db_user
-        self.db_host = db_host
-        self.db_pass = db_pass
-        self.db_name = db_name
         self._connect_with_retries(db_host, db_user, db_pass, db_name)
 
     def get_credentials(self, username: str) -> str:

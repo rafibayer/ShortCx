@@ -29,7 +29,7 @@ class TestApiService(unittest.TestCase):
             password_conf="testpassword")
 
         resp = self.stub.CreateUser(request)
-        self.tokens.append(resp.auth_token)
+        self.tokens.add(resp.auth_token)
 
     def test_Login(self):
         request = apiservice_pb2.LoginRequest(
@@ -37,7 +37,7 @@ class TestApiService(unittest.TestCase):
             password="testpassword")
         
         resp = self.stub.Login(request)
-        self.tokens.append(resp.auth_token)
+        self.tokens.add(resp.auth_token)
 
     def test_Logout(self):
         for token in self.tokens:

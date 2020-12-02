@@ -11,26 +11,22 @@ namespace User
 {
     class UserController
     {
-        private MySqlConnection conn;
-        private const int RETRY_DELAY_SEC = 10;
-        private const int MAX_RETRIES = 6;
-
+        private IUserDataRepository _repository;
+       
         private const int MIN_USERNAME_LENGTH = 4;
         private const int MAX_USERNAME_LENGTH = 20;
         private const int MIN_PASSWORD_LENGTH = 8;
         private const int MAX_PASSWORD_LENGTH = 50;
 
-        public UserController(string dbAddr, string dbUser, string dbPass, string dbName, string dbPort)  
+        public UserController(IUserDataRepository repository)
         {
-            string connStr = $"server={dbAddr};user={dbUser};database={dbName};port={dbPort};password={dbPass}";
-            Console.WriteLine($"Attemtping to connect to database: connStr = {connStr}");
-            this.conn = new MySqlConnection(connStr);
-            OpenConnWithRetries();
+            _repository = repository;
         }
 
         public void CreateUser(string username, string password, string passwordConf)
         {
 
+            MySqlConnection conn = _repository.GetConnection();
             ValidateUser(username, password, passwordConf);
             string passHash = bc.HashPassword(password);
 
@@ -40,11 +36,11 @@ namespace User
             cmd.Parameters.AddWithValue("@passhash", passHash);
 
             cmd.ExecuteNonQuery();
-            conn.Close();
         }
 
         private bool UsernameAvailable(string username)
         {
+            MySqlConnection conn = _repository.GetConnection();
             string sql = "SELECT COUNT(*) FROM users WHERE username=@username";
             MySqlCommand cmd = new MySqlCommand(sql, conn);
             cmd.Parameters.AddWithValue("@username", username);
@@ -95,27 +91,6 @@ namespace User
                     "Username Is Already Taken",
                     StatusCode.AlreadyExists);
             }
-        }
-
-        private void OpenConnWithRetries() 
-        {
-            int tries = 0;
-            while (tries < MAX_RETRIES)
-            {
-                try
-                {
-                    conn.Open();
-                    Console.WriteLine("Success!");
-                    return;
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine($"Failed to connect to database, trying again in {RETRY_DELAY_SEC} sec:\n\t{e}");
-                    Thread.Sleep(RETRY_DELAY_SEC*1000);
-                }
-                tries++;
-            }
-            throw new TimeoutException($"Failed to connect to DB after {MAX_RETRIES} retries...");
         }
     }
 }

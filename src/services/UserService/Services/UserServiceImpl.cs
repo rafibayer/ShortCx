@@ -10,28 +10,23 @@ namespace User
     public class UserServiceImpl: UserService.UserServiceBase
     {
         private readonly ILogger<UserServiceImpl> _logger;
-        private UserController controller;
+        private readonly IUserDataRepository _repository;
+        private readonly UserController _controller;
 
         // Add data-access info to this constructor?
-        public UserServiceImpl(ILogger<UserServiceImpl> logger)
+        public UserServiceImpl(ILogger<UserServiceImpl> logger, IUserDataRepository repository)
         {
             _logger = logger;
-            
-            // Get enviornment variables
-            string dbAddr = Environment.GetEnvironmentVariable("DB_HOST");
-            string dbUser = Environment.GetEnvironmentVariable("DB_USER");
-            string dbPass = Environment.GetEnvironmentVariable("DB_PASS");
-            string dbName = Environment.GetEnvironmentVariable("DB_NAME");
-            string dbPort = Environment.GetEnvironmentVariable("DB_PORT");
-            
-            controller = new UserController(dbAddr, dbUser, dbPass, dbName, dbPort);
+            _repository = repository;
+
+            _controller = new UserController(repository);
         }
 
         public override Task<InternalCreateUserResponse> CreateUser(CreateUserRequest request, ServerCallContext context) 
         {
             try
             {
-                controller.CreateUser(request.Username, request.Password, request.PasswordConf);
+                _controller.CreateUser(request.Username, request.Password, request.PasswordConf);
                 return Task.FromResult(new InternalCreateUserResponse
                 {
                     Success = true
