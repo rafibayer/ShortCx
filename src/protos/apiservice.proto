@@ -33,7 +33,8 @@ message GetSessionRequest {
 }
 
 message GetSessionResponse {
-    string username = 1;
+    int32 user_id = 1;
+    string username = 2;
 }
 
 // New user response containing session auth

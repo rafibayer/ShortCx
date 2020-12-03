@@ -19,8 +19,8 @@ class Controller:
         self.sessionstore = sessionstore
 
     def get_session(self, getSessionRequest: apiservice_pb2.GetSessionRequest) -> apiservice_pb2.GetSessionResponse:
-        user = self.sessionstore.get_state(getSessionRequest.auth_token)
-        return apiservice_pb2.GetSessionResponse(username=user)
+        state = self.sessionstore.get_state(getSessionRequest.auth_token)
+        return apiservice_pb2.GetSessionResponse(user_id=state.user_id, username=state.username)
 
     def login(self, loginRequest: apiservice_pb2.LoginRequest) -> apiservice_pb2.LoginResponse:
         """Handles a login request
@@ -34,8 +34,10 @@ class Controller:
         Returns:
             LoginResponse: response containing auth_token or error details
         """
-        if self.authenticate(loginRequest.username, loginRequest.password):
-            token = self.sessionstore.create_session(loginRequest.username)
+        user = self.datastore.get_user(loginRequest.username)
+
+        if self.authenticate(user, loginRequest.password):
+            token = self.sessionstore.create_session(user.user_id, user.username)
             return apiservice_pb2.LoginResponse(auth_token=token)
         raise exceptions.BadCredentialsError()
 
@@ -51,20 +53,16 @@ class Controller:
         self.sessionstore.end_session(logoutRequest.auth_token)
         return apiservice_pb2.LogoutResponse(success=True)
 
-    def authenticate(self, username: str, password: str) -> bool:
+    def authenticate(self, user, password: str) -> bool:
         """Authenticates a given username + password
 
         Args:
-            username (str): Entered username
+            username (User): User details
             password (str): Entered password
 
         Returns:
             bool: True if valid, false otherwise
         """
-        try:
-            expected = bytes(self.datastore.get_credentials(username), encoding=STR_ENCODING)
-        except exceptions.AuthException:
-            return False
-
+        expected = bytes(user.passhash, encoding=STR_ENCODING)
         given = bytes(password, encoding=STR_ENCODING)
         return bcrypt.checkpw(given, expected)

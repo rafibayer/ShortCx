@@ -26,6 +26,15 @@ class AuthService(authservice_pb2_grpc.AuthServiceServicer):
         self.auth_controller = auth_controller
 
     def GetSession(self, request: apiservice_pb2.GetSessionRequest, context: grpc.RpcContext) -> apiservice_pb2.GetSessionResponse:
+        """Handles GetSession Rpc
+
+        Args:
+            request (apiservice_pb2.GetSessionRequest): User GetSessionRequest forwarded from ApiService
+            context (grpc.RpcContext): Request Context
+
+        Returns:
+            apiservice_pb2.GetSessionResponse: response containing session state or error details
+        """
         try:
             return self.auth_controller.get_session(request)
         except exceptions.AuthException as e:

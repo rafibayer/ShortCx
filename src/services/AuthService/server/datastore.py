@@ -7,6 +7,18 @@ import logging
 RETRY_DELAY=10
 MAX_RETRIES=10
 
+class User:
+    def __init__(self, user_id, username, created_at, passhash):
+        self.user_id = user_id
+        self.username = username
+        self.created_at = created_at
+        self.passhash = passhash
+    
+    @classmethod
+    def from_row(cls, row):
+        return cls(*row)
+
+
 class DataStore:
 
     def __init__(self, db_host: str, db_user: str, db_pass: str, db_name: str):
@@ -21,7 +33,7 @@ class DataStore:
         logging.info(f'Tying to connect to db: {db_user}@{db_host}:{db_pass} ({db_name=})')
         self._connect_with_retries(db_host, db_user, db_pass, db_name)
 
-    def get_credentials(self, username: str) -> str:
+    def get_user(self, username: str) -> User:
         """Get credentials for a given username
 
         Args:
@@ -35,7 +47,7 @@ class DataStore:
         """
         self.database.start_transaction()
         select = self.database.cursor()
-        sel_sql = 'SELECT passhash FROM users WHERE username=%s'
+        sel_sql = 'SELECT * FROM users WHERE username=%s'
         select.execute(sel_sql, (username, ))
         result = select.fetchone()
         if result is None:
@@ -43,7 +55,7 @@ class DataStore:
             raise exceptions.BadCredentialsError()
         
         self.database.commit()
-        return result[0]
+        return User.from_row(result)
 
     def _connect_with_retries(self, db_host, db_user, db_pass, db_name):
         """Connect to the database with retries

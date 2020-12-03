@@ -33,7 +33,6 @@ func (s *Server) CreateUser(ctx context.Context, request *api.CreateUserRequest)
 		return nil, status.Errorf(errStatus.Code(), errStatus.Message())
 	}
 	return &api.CreateUserResponse{AuthToken: loginResponse.AuthToken}, nil
-
 }
 
 // GetSession handles GetSession requests, passing them to AuthService
