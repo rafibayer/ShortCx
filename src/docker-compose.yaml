@@ -21,6 +21,7 @@ services:
     environment: 
       PORT: '9090'
       AUTH_ADDR: 'auth_svc:9091'
+      SHORTCUT_ADDR: 'shorcut_svc:9092'
       USER_ADDR: 'user_svc:9093'
     ports:
       - "9090:9090"

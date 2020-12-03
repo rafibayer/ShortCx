@@ -5,6 +5,7 @@ PROTO_DIR=./protos
 API_PROTO=$(PROTO_DIR)/apiservice.proto
 API_OUT=./services/ApiService/api
 API_AUTH_OUT=./services/ApiService/auth
+API_SHORTCUT_OUT=./services/ApiService/shortcut
 API_USER_OUT=./services/ApiService/user
 
 # AuthService
@@ -70,6 +71,11 @@ codegen_api:
 	protoc -I=$(PROTO_DIR) --go_out=$(API_USER_OUT) --go_opt=paths=source_relative \
     --go-grpc_out=$(API_USER_OUT) --go-grpc_opt=paths=source_relative \
     $(USER_PROTO)
+
+	# ShorcutService (Client)
+	protoc -I=$(PROTO_DIR) --go_out=$(API_SHORTCUT_OUT) --go_opt=paths=source_relative \
+    --go-grpc_out=$(API_SHORTCUT_OUT) --go-grpc_opt=paths=source_relative \
+    $(SHORTCUT_PROTO)
 	
 
 codegen_auth:

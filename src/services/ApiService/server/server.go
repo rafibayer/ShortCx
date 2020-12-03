@@ -3,6 +3,7 @@ package server
 import (
 	"ShortCx/api"
 	"ShortCx/auth"
+	"ShortCx/shortcut"
 	"ShortCx/user"
 	"context"
 
@@ -12,8 +13,9 @@ import (
 // Server implements APIService gRPC service
 type Server struct {
 	api.UnimplementedAPIServiceServer
-	AuthClient auth.AuthServiceClient
-	UserClient user.UserServiceClient
+	AuthClient     auth.AuthServiceClient
+	ShortcutClient shortcut.ShortcutServiceClient
+	UserClient     user.UserServiceClient
 	// More fields for other service clients
 }
 
@@ -70,15 +72,33 @@ func (s *Server) Logout(ctx context.Context, request *api.LogoutRequest) (*api.L
 
 // CreateShortcut handles CreateShortcut requests, passing them to ShortcutService
 func (s *Server) CreateShortcut(ctx context.Context, request *api.CreateShortcutRequest) (*api.CreateShortcutResponse, error) {
-	return &api.CreateShortcutResponse{UrlToken: "UNIMPLEMENTED URL"}, nil
+	resp, err := s.ShortcutClient.CreateShortcut(context.Background(), request)
+	if err != nil {
+		// If there is an error from a downstream service, propagate it up
+		errStatus, _ := status.FromError(err)
+		return nil, status.Errorf(errStatus.Code(), errStatus.Message())
+	}
+	return resp, nil
 }
 
 // DeleteShortcut handles DeleteShortcut requests, passing them to ShortcutService
 func (s *Server) DeleteShortcut(ctx context.Context, request *api.DeleteShortcutRequest) (*api.DeleteShortcutResponse, error) {
-	return &api.DeleteShortcutResponse{Success: true}, nil
+	resp, err := s.ShortcutClient.DeleteShortcut(context.Background(), request)
+	if err != nil {
+		// If there is an error from a downstream service, propagate it up
+		errStatus, _ := status.FromError(err)
+		return nil, status.Errorf(errStatus.Code(), errStatus.Message())
+	}
+	return resp, nil
 }
 
 // GetShortcut handles GetShortcut requests, passing them to ShortcutService
 func (s *Server) GetShortcut(ctx context.Context, request *api.GetShortcutRequest) (*api.GetShortcutResponse, error) {
-	return &api.GetShortcutResponse{TargetUrl: "UNIMPLEMENTED URL"}, nil
+	resp, err := s.ShortcutClient.GetShortcut(context.Background(), request)
+	if err != nil {
+		// If there is an error from a downstream service, propagate it up
+		errStatus, _ := status.FromError(err)
+		return nil, status.Errorf(errStatus.Code(), errStatus.Message())
+	}
+	return resp, nil
 }

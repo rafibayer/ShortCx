@@ -8,6 +8,7 @@ import (
 	"ShortCx/api"
 	"ShortCx/auth"
 	"ShortCx/server"
+	"ShortCx/shortcut"
 	"ShortCx/user"
 
 	"google.golang.org/grpc"
@@ -43,6 +44,12 @@ func main() {
 	authClient := auth.NewAuthServiceClient(dialService(authAddr))
 	log.Println("Done!")
 
+	// Connect to ShortcutService
+	log.Println("Trying to connect to ShortcutService...")
+	shortcutAddr := getenv("USER_ADDR", "shorcut_svc:9092")
+	shortcutClient := shortcut.NewShortcutServiceClient(dialService(shortcutAddr))
+	log.Println("Done!")
+
 	// Connect to UserService
 	log.Println("Trying to connect to UserService...")
 	userAddr := getenv("USER_ADDR", "user_svc:9093")
@@ -59,7 +66,10 @@ func main() {
 
 	// Serve APIService server
 	s := grpc.NewServer()
-	api.RegisterAPIServiceServer(s, &server.Server{AuthClient: authClient, UserClient: userClient})
+	api.RegisterAPIServiceServer(
+		s,
+		&server.Server{AuthClient: authClient, ShortcutClient: shortcutClient, UserClient: userClient},
+	)
 	log.Printf("Serving on port %s ...", port)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve on port %s (%v)", port, err)
