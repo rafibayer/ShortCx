@@ -6,12 +6,12 @@ services:
   #     - proxy_svc
   #   ports:
   #     - "80:80"
-  # proxy_svc:
-  #   build: services/Proxy
-  #   depends_on: 
-  #     - api_svc
-  #   ports:
-  #     - "8080:8080"
+  proxy_svc:
+    build: services/Proxy
+    depends_on: 
+      - api_svc
+    ports:
+      - "8080:8080"
   api_svc:
     build: services/ApiService
     depends_on: 

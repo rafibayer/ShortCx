@@ -27,7 +27,7 @@ func (s *Server) CreateUser(ctx context.Context, request *api.CreateUserRequest)
 
 	// If user creation succeeded, make a session for the new user
 	loginRequest := &api.LoginRequest{Username: internalCreateResp.Created, Password: request.Password}
-	loginResponse, err := s.Login(context.Background(), loginRequest)
+	loginResponse, err := s.AuthClient.Login(context.Background(), loginRequest)
 	if err != nil {
 		errStatus, _ := status.FromError(err)
 		return nil, status.Errorf(errStatus.Code(), errStatus.Message())
