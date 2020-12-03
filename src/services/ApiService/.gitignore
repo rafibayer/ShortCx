@@ -1,6 +1,7 @@
 # Generated code
 api/*.pb.*
 auth/*.pb.*
+shortcut/*.pb.*
 user/*.pb.*
 
 # Binaries for programs and plugins
