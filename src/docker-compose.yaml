@@ -16,12 +16,12 @@ services:
     build: services/ApiService
     depends_on: 
       - auth_svc
-      #- shortcut_svc
-      #- user_svc
+      - shortcut_svc
+      - user_svc
     environment: 
-      - PORT=:9090
-      - AUTH_ADDR=auth_svc:9091
-      - USER_ADDR=user_svc:9093
+      PORT: '9090'
+      AUTH_ADDR: 'auth_svc:9091'
+      USER_ADDR: 'user_svc:9093'
     ports:
       - "9090:9090"
   auth_svc:
@@ -39,10 +39,12 @@ services:
       REDIS_HOST: 'session_svc'
       REDIS_PORT: '6379'
       REDIS_MAX_CON: '10'
-  # shortcut_svc:
-  #   build: services/Shortcut
-  #   depends_on: 
-  #     - database_svc
+  shortcut_svc:
+    build: services/ShortcutService
+    depends_on: 
+      - database_svc
+    environment: 
+      PORT: ':9092'
   user_svc:
     build: services/UserService
     depends_on: 

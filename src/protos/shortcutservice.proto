@@ -1,9 +1,11 @@
 syntax = "proto3";
-option go_package = "shortcut;shortcut";
+option go_package = "ShortCx/shortcut";
+package protos;
+
 import "apiservice.proto";
 
 service ShortcutService {
     rpc CreateShortcut (CreateShortcutRequest) returns (CreateShortcutResponse) {}
     rpc DeleteShortcut (DeleteShortcutRequest) returns (DeleteShortcutResponse) {}
-    rpc GetShortcut (GetShortcutRequest) returns (DeleteShortcutResponse) {}
+    rpc GetShortcut (GetShortcutRequest) returns (GetShortcutResponse) {}
 }

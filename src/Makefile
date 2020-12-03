@@ -11,6 +11,11 @@ API_USER_OUT=./services/ApiService/user
 AUTH_PROTO=$(PROTO_DIR)/authservice.proto
 AUTH_OUT=./services/AuthService/server
 
+# ShortcutService
+SHORTCUT_PROTO=$(PROTO_DIR)/shortcutservice.proto
+SHORTCUT_OUT=./services/ShortcutService/shortcut
+SHORTCUT_API_OUT=./services/ShortcutService/api
+
 # UserService
 USER_PROTO=$(PROTO_DIR)/userservice.proto
 USER_OUT=./services/UserService
@@ -45,7 +50,7 @@ down:
 	docker-compose down
 	@echo "====== Done! ======"
 
-codegen: codegen_api codegen_auth codegen_user build_test
+codegen: codegen_api codegen_auth codegen_shortcut codegen_user build_test
 	@echo "====== Generated All ======"
 
 # Generate Code for APIService
@@ -80,6 +85,18 @@ codegen_auth:
 	--python_out=$(AUTH_OUT) \
 	--grpc_python_out=$(AUTH_OUT) \
 	$(API_PROTO)
+
+codegen_shortcut:
+	@echo "====== Generating ShortcutService ======"
+	# ShortcutService 
+	protoc -I=$(PROTO_DIR) --go_out=$(SHORTCUT_OUT) --go_opt=paths=source_relative \
+    --go-grpc_out=$(SHORTCUT_OUT) --go-grpc_opt=paths=source_relative \
+    $(SHORTCUT_PROTO)
+
+	# ApiService (.proto import dependency)
+	protoc -I=$(PROTO_DIR) --go_out=$(SHORTCUT_API_OUT) --go_opt=paths=source_relative \
+    --go-grpc_out=$(SHORTCUT_API_OUT) --go-grpc_opt=paths=source_relative \
+    $(API_PROTO)
 
 # Doesn't actually generate, just copies the protos.
 # Dotnet generates at build-time
