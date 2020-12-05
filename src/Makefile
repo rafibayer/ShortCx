@@ -21,6 +21,9 @@ SHORTCUT_API_OUT=./services/ShortcutService/api
 USER_PROTO=$(PROTO_DIR)/userservice.proto
 USER_OUT=./services/UserService
 
+# ClientService
+CLIENT_OUT=./services/ClientService/src
+
 # Go protoc options
 GO_OPT=import
 GRPC_OPT=source_relative
@@ -109,6 +112,11 @@ codegen_shortcut:
 codegen_user:
 	@echo "====== Copying protos to UserService ======"
 	cp -r $(PROTO_DIR) $(USER_OUT)
+
+codegen_client:
+	protoc -I=$(PROTO_DIR) $(API_PROTO) \
+    --js_out=import_style=commonjs:$(CLIENT_OUT) \
+    --grpc-web_out=import_style=commonjs,mode=grpcwebtext:$(CLIENT_OUT)
 
 
 # Run all unittests (currently broken until someone answers my stackoverflow)

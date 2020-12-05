@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   # client_svc:
-  #   build: services/Client
+  #   build: services/ClientService
   #   depends_on: 
   #     - proxy_svc
   #   ports:
