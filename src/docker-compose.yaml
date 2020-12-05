@@ -19,9 +19,9 @@ services:
       - shortcut_svc
       - user_svc
     environment: 
-      PORT: '9090'
+      PORT: ':9090'
       AUTH_ADDR: 'auth_svc:9091'
-      SHORTCUT_ADDR: 'shorcut_svc:9092'
+      SHORTCUT_ADDR: 'shortcut_svc:9092'
       USER_ADDR: 'user_svc:9093'
     ports:
       - "9090:9090"
@@ -46,6 +46,10 @@ services:
       - database_svc
     environment: 
       PORT: ':9092'
+      DB_HOST: 'database_svc'
+      DB_USER: 'root'
+      DB_PASS: 'root'
+      DB_NAME: 'db'
   user_svc:
     build: services/UserService
     depends_on: 

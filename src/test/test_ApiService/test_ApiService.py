@@ -22,6 +22,21 @@ class TestApiService(unittest.TestCase):
     def _randname():
         return ''.join(random.choice(string.ascii_lowercase) for _ in range(8))
 
+    def makeAcc(self, username="TESTUSER", password="TESTPASSWORD"):
+        request = apiservice_pb2.CreateUserRequest(
+            username=username,
+            password=password,
+            password_conf=password)
+
+        self.stub.CreateUser(request)
+
+    def makeSess(self, username="TESTUSER", password="TESTPASSWORD"):
+        request = apiservice_pb2.LoginRequest(
+            username=username,
+            password=password)
+        
+        return self.stub.Login(request).auth_token
+
     def test_CreateUser(self):
         request = apiservice_pb2.CreateUserRequest(
             username=self.username,
@@ -36,7 +51,6 @@ class TestApiService(unittest.TestCase):
             auth_token = next(iter(self.tokens)))
 
         resp = self.stub.GetSession(request)
-        print(resp)
 
     def test_Login(self):
         request = apiservice_pb2.LoginRequest(
@@ -53,13 +67,16 @@ class TestApiService(unittest.TestCase):
             
             self.stub.Logout(request)
 
-    # def test_CreateShortcut(self):
-    #     request = apiservice_pb2.CreateShortcutRequest(
-    #         auth_token="FAKE TOKEN",
-    #         target_url="FAKE URL")
+    def test_CreateShortcut(self):
+        name = TestApiService._randname()
+        self.makeAcc(username=name)
+        token = self.makeSess(username=name)
+        request = apiservice_pb2.CreateShortcutRequest(
+            auth_token=token,
+            target_url="FAKE URL")
         
-    #     # print("calling createshortcut")
-    #     resp = self.stub.CreateShortcut(request)
+        # print("calling createshortcut")
+        resp = self.stub.CreateShortcut(request)
 
     # def test_DeleteShortcut(self):
     #     request = apiservice_pb2.DeleteShortcutRequest(

@@ -3,6 +3,7 @@ module ShortCx
 go 1.14
 
 require (
+	github.com/go-sql-driver/mysql v1.5.0
 	github.com/golang/protobuf v1.4.3
 	github.com/google/go-cmp v0.5.4 // indirect
 	golang.org/x/tools/gopls v0.0.0-20201124202034-299f270db459 // indirect

@@ -5,7 +5,17 @@ package protos;
 import "apiservice.proto";
 
 service ShortcutService {
-    rpc CreateShortcut (CreateShortcutRequest) returns (CreateShortcutResponse) {}
-    rpc DeleteShortcut (DeleteShortcutRequest) returns (DeleteShortcutResponse) {}
+    rpc CreateShortcut (InternalCreateShortcutRequest) returns (CreateShortcutResponse) {}
+    rpc DeleteShortcut (InternalDeleteShortcutRequest) returns (DeleteShortcutResponse) {}
     rpc GetShortcut (GetShortcutRequest) returns (GetShortcutResponse) {}
+}
+
+message InternalCreateShortcutRequest {
+    int32 auth_user_id = 1;
+    string target_url = 2;
+}
+
+message InternalDeleteShortcutRequest {
+    int32 auth_user_id = 1;
+    string url_token = 2;
 }

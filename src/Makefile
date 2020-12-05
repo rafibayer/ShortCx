@@ -72,7 +72,7 @@ codegen_api:
     --go-grpc_out=$(API_USER_OUT) --go-grpc_opt=paths=source_relative \
     $(USER_PROTO)
 
-	# ShorcutService (Client)
+	# ShortcutService (Client)
 	protoc -I=$(PROTO_DIR) --go_out=$(API_SHORTCUT_OUT) --go_opt=paths=source_relative \
     --go-grpc_out=$(API_SHORTCUT_OUT) --go-grpc_opt=paths=source_relative \
     $(SHORTCUT_PROTO)

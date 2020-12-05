@@ -5,5 +5,8 @@
         "options": [
             "--proto_path=${workspaceFolder}/protos",
         ]
-    }
+    },
+
+    "go.useLanguageServer": true
+    
 }

@@ -46,7 +46,7 @@ func main() {
 
 	// Connect to ShortcutService
 	log.Println("Trying to connect to ShortcutService...")
-	shortcutAddr := getenv("USER_ADDR", "shorcut_svc:9092")
+	shortcutAddr := getenv("SHORTCUT_ADDR", "shortcut_svc:9092")
 	shortcutClient := shortcut.NewShortcutServiceClient(dialService(shortcutAddr))
 	log.Println("Done!")
 

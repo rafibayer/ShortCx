@@ -6,9 +6,9 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 CREATE TABLE IF NOT EXISTS shortcuts (
-  shorcut_id INT AUTO_INCREMENT PRIMARY KEY,
+  shortcut_id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT NOT NULL,
-  token VARCHAR(255) NOT NULL,
+  token VARCHAR(32) NOT NULL UNIQUE,
   target_url VARCHAR(500) NOT NULL,
   created_at DATE NOT NULL,
   visits INT NOT NULL,
