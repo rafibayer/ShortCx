@@ -15,8 +15,6 @@ class TestApiService(unittest.TestCase):
         # print("establishing stub")
         channel = grpc.insecure_channel(target=SERVICE_ADDR)
         cls.stub = apiservice_pb2_grpc.APIServiceStub(channel)
-        cls.username = cls._randname()
-        cls.tokens = set()
 
     @staticmethod
     def _randname():
@@ -28,7 +26,7 @@ class TestApiService(unittest.TestCase):
             password=password,
             password_conf=password)
 
-        self.stub.CreateUser(request)
+        return self.stub.CreateUser(request).auth_token
 
     def makeSess(self, username="TESTUSER", password="TESTPASSWORD"):
         request = apiservice_pb2.LoginRequest(
@@ -37,46 +35,56 @@ class TestApiService(unittest.TestCase):
         
         return self.stub.Login(request).auth_token
 
-    def test_CreateUser(self):
-        request = apiservice_pb2.CreateUserRequest(
-            username=self.username,
-            password="testpassword",
-            password_conf="testpassword")
+    def makeShort(self, token, target="example.com"):
+        request = apiservice_pb2.CreateShortcutRequest(
+            auth_token = token,
+            target_url = target
+        )
+        return self.stub.CreateShortcut(request).url_token
 
-        resp = self.stub.CreateUser(request)
-        self.tokens.add(resp.auth_token)
+    def test_CreateUser(self):
+        self.makeAcc(username=self._randname())
 
     def test_GetSession(self):
-        request = apiservice_pb2.GetSessionRequest(
-            auth_token = next(iter(self.tokens)))
-
-        resp = self.stub.GetSession(request)
+        name = self._randname()
+        token = self.makeAcc(name)
+        request = apiservice_pb2.GetSessionRequest(auth_token = token)
+        self.assertEqual(self.stub.GetSession(request).username, name) 
 
     def test_Login(self):
+        name, password = self._randname(), "PASSWORD"
+        self.makeAcc(name, password)
         request = apiservice_pb2.LoginRequest(
-            username=self.username,
-            password="testpassword")
+            username=name,
+            password=password)
         
         resp = self.stub.Login(request)
-        self.tokens.add(resp.auth_token)
 
     def test_Logout(self):
-        for token in self.tokens:
-            request = apiservice_pb2.LogoutRequest(
-                auth_token=token)
-            
-            self.stub.Logout(request)
+        token = self.makeAcc(self._randname())
+        request = apiservice_pb2.LogoutRequest(auth_token=token)
 
     def test_CreateShortcut(self):
-        name = TestApiService._randname()
-        self.makeAcc(username=name)
-        token = self.makeSess(username=name)
-        request = apiservice_pb2.CreateShortcutRequest(
-            auth_token=token,
-            target_url="FAKE URL")
-        
-        # print("calling createshortcut")
-        resp = self.stub.CreateShortcut(request)
+        token = self.makeAcc(self._randname())
+        self.makeShort(token)
+
+    def test_DeleteShortcut(self):
+        token = self.makeAcc(self._randname())
+        urlTok = self.makeShort(token)
+        req = apiservice_pb2.DeleteShortcutRequest(
+            auth_token = token,
+            url_token = urlTok
+        )
+        self.stub.DeleteShortcut(req)
+
+    def test_GetShortcut(self):
+        token = self.makeAcc(self._randname())
+        urlTok = self.makeShort(token)
+        req = apiservice_pb2.GetShortcutRequest(
+            url_token = urlTok
+        )
+        self.stub.GetShortcut(req)
+
 
     # def test_DeleteShortcut(self):
     #     request = apiservice_pb2.DeleteShortcutRequest(

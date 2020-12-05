@@ -73,7 +73,7 @@ func main() {
 
 	// Serve ShortcutService server
 	s := grpc.NewServer()
-	shortcut.RegisterShortcutServiceServer(s, &server.Server{Store: store})
+	shortcut.RegisterShortcutServiceServer(s, server.NewServer(store))
 	log.Printf("Serving on port %s ...", port)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("Failed to serve on port %s (%v)", port, err)

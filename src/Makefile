@@ -28,8 +28,8 @@ GRPC_OPT=source_relative
 # testing
 TEST_DIR=./test
 API_TEST_OUT=./test/test_ApiService
-AUTH_TEST_OUT=./test/test_AuthService
-USER_TEST_OUT=./test/test_UserService
+# AUTH_TEST_OUT=./test/test_AuthService
+# USER_TEST_OUT=./test/test_UserService
 
 up: codegen
 	@echo "====== Starting Services ======"
@@ -123,13 +123,13 @@ build_test:
 	# APIService
 	python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(API_TEST_OUT) --grpc_python_out=$(API_TEST_OUT) $(API_PROTO)
 
-	# AuthService
-	python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(AUTH_TEST_OUT) --grpc_python_out=$(AUTH_TEST_OUT) $(AUTH_PROTO)
-	python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(AUTH_TEST_OUT) --grpc_python_out=$(AUTH_TEST_OUT) $(API_PROTO)
+	# # AuthService
+	# python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(AUTH_TEST_OUT) --grpc_python_out=$(AUTH_TEST_OUT) $(AUTH_PROTO)
+	# python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(AUTH_TEST_OUT) --grpc_python_out=$(AUTH_TEST_OUT) $(API_PROTO)
 
-	# UserService
-	python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(USER_TEST_OUT) --grpc_python_out=$(USER_TEST_OUT) $(API_PROTO)
-	python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(USER_TEST_OUT) --grpc_python_out=$(USER_TEST_OUT) $(USER_PROTO)
+	# # UserService
+	# python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(USER_TEST_OUT) --grpc_python_out=$(USER_TEST_OUT) $(API_PROTO)
+	# python -m grpc_tools.protoc -I$(PROTO_DIR) --python_out=$(USER_TEST_OUT) --grpc_python_out=$(USER_TEST_OUT) $(USER_PROTO)
 
 
 # Use me for suggestions when things aren't working
