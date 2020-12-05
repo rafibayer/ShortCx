@@ -1,11 +1,11 @@
 version: "3.8"
 services:
-  # client_svc:
-  #   build: services/ClientService
-  #   depends_on: 
-  #     - proxy_svc
-  #   ports:
-  #     - "80:80"
+  client_svc:
+    build: services/ClientService
+    depends_on: 
+      - proxy_svc
+    ports:
+      - "80:80"
   proxy_svc:
     build: services/Proxy
     depends_on: 

@@ -26,6 +26,7 @@ function getToken() {
 document.body.appendChild(hello());
 let token = getToken();
 
+// TODO either resolve URL from window location, or inject with webpack .env
 let shortCxClient = new APIServiceClient("http://localhost:8080");
 let request = new GetShortcutRequest();
 request.setUrlToken(token);

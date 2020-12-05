@@ -54,7 +54,7 @@ down:
 	docker-compose down
 	@echo "====== Done! ======"
 
-codegen: codegen_api codegen_auth codegen_shortcut codegen_user build_test
+codegen: codegen_api codegen_auth codegen_shortcut codegen_user codegen_client build_test
 	@echo "====== Generated All ======"
 
 # Generate Code for APIService
@@ -113,10 +113,17 @@ codegen_user:
 	@echo "====== Copying protos to UserService ======"
 	cp -r $(PROTO_DIR) $(USER_OUT)
 
+# Generates code and builds webpack
 codegen_client:
+	@echo "====== Generating ClientService ======"
 	protoc -I=$(PROTO_DIR) $(API_PROTO) \
     --js_out=import_style=commonjs:$(CLIENT_OUT) \
     --grpc-web_out=import_style=commonjs,mode=grpcwebtext:$(CLIENT_OUT)
+
+	@echo "====== Building ClientService ======"
+	cd ./services/ClientService && npx webpack
+
+
 
 
 # Run all unittests (currently broken until someone answers my stackoverflow)
