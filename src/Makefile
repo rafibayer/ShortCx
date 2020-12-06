@@ -39,7 +39,7 @@ up: codegen
 	docker-compose up -d --build
 	@echo "====== Done! ======"
 
-upng:
+up_nogen:
 	@echo "====== Starting Services (no codegen) ======"
 	docker-compose up -d --build
 	@echo "====== Done! ======"
@@ -122,8 +122,6 @@ codegen_client:
 
 	@echo "====== Building ClientService ======"
 	cd ./services/ClientService && npx webpack
-
-
 
 
 # Run all unittests (currently broken until someone answers my stackoverflow)

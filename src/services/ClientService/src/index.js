@@ -1,4 +1,5 @@
-const {LoginRequest, LogoutRequest, CreateUserRequest, GetSessionRequest} = require('./apiservice_pb.js');
+const {LoginRequest, LogoutRequest, CreateUserRequest,
+        GetSessionRequest, CreateShortcutRequest} = require('./apiservice_pb.js');
 const {APIServiceClient} = require('./apiservice_grpc_web_pb.js');
 
 // TODO: resolve or get endpoint from .env
@@ -6,11 +7,12 @@ let shortCxClient = new APIServiceClient("http://localhost:8080");
 
 // Populate login/signup or account/signout
 window.addEventListener('load', function() {
-    PopulateSessionModules();
+    PopulatePage();
 });
 
-function PopulateSessionModules() {
-    let dest = document.getElementById("accounts");
+function PopulatePage() {
+    let accounts = document.getElementById("accounts");
+    let creation = document.getElementById("creation");
     let authToken = localStorage.getItem("Authorization");
     let foundSession = false;
     if (authToken) {
@@ -22,17 +24,20 @@ function PopulateSessionModules() {
             } else {
                 foundSession = true;
                 let respObj = resp.toObject();
-                clearContents(dest);
-                dest.appendChild(AccountModule(respObj.username, DoLogout));
+                clearContents(accounts);
+                clearContents(creation);
+                accounts.appendChild(AccountModule(respObj.username, DoLogout));
+                creation.appendChild(ShortcutCreateModule(DoCreate));
             }
         });
     } 
 
     // No token or expired session -> login/signup modules
     if (!foundSession) {
-        clearContents(dest);
-        dest.appendChild(LoginModule(DoLogin));
-        dest.appendChild(SignupModule(DoSignup));
+        clearContents(accounts);
+        clearContents(creation);
+        accounts.appendChild(LoginModule(DoLogin));
+        accounts.appendChild(SignupModule(DoSignup));
     } 
 }
 
@@ -54,7 +59,7 @@ function DoLogin(username, password) {
             let respObj = resp.toObject();
             localStorage.setItem("Authorization", respObj.authToken);
             console.log("Login Succeeded!");
-            PopulateSessionModules();
+            PopulatePage();
         }
     });
 }
@@ -69,7 +74,7 @@ function DoLogout() {
         } else {
             localStorage.removeItem("Authorization");
             console.log("Successfully logged out!");
-            PopulateSessionModules();
+            PopulatePage();
         }
     });
 }
@@ -87,9 +92,24 @@ function DoSignup(username, password, passwordConf) {
             let respObj = resp.toObject();
             localStorage.setItem("Authorization", respObj.authToken);
             console.log("Creation Succeeded");
-            PopulateSessionModules();
+            PopulatePage();
         }
     });
+}
+
+function DoCreate(targetUrl, resultElement) {
+    let request = new CreateShortcutRequest();
+    request.setAuthToken(localStorage.getItem("Authorization"));
+    request.setTargetUrl(targetUrl);
+    
+    shortCxClient.createShortcut(request, {}, (err, resp) => {
+        if (err) {
+            console.error(err);
+        } else {
+            let respObj = resp.toObject();
+            resultElement.innerText = `${window.location.origin}/${respObj.urlToken}`;
+        }
+    })
 }
 
 function AccountModule(username, logoutCallback) {
@@ -146,7 +166,6 @@ function SignupModule(signupCallback) {
     header.innerText = "Sign Up";
     div.appendChild(header);
 
-
     let username = document.createElement('input'); 
     username.setAttribute('type', 'text');
     username.setAttribute('placeholder', 'Username');
@@ -170,6 +189,34 @@ function SignupModule(signupCallback) {
     submit.addEventListener("click", () => {
         signupCallback(username.value, password.value, passwordConf.value);
     });
+
+    return div;
+}
+
+function ShortcutCreateModule(createCallback) {
+    const div = document.createElement("div");
+    div.classList.add("FormModule");
+    const header = document.createElement("h3");
+    header.innerText = "Create Shortcut";
+    div.appendChild(header);
+    
+    let targetUrl = document.createElement('input'); 
+    targetUrl.setAttribute('type', 'text');
+    targetUrl.setAttribute('placeholder', 'Destination');
+    div.appendChild(targetUrl);
+
+    let create = document.createElement('input');
+    create.setAttribute('type', 'button');
+    create.setAttribute('value', 'Create Shortcut');
+    div.appendChild(create);
+
+    let result = document.createElement("h3");
+    div.appendChild(result);
+
+    create.addEventListener("click", () => {
+        createCallback(targetUrl.value, result);
+    });
+
 
     return div;
 }
