@@ -1,0 +1,9 @@
+.FormModule {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+}
+
+.FormModule > * {
+    margin: 0.5%;
+}
