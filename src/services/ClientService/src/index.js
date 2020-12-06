@@ -1,23 +1,45 @@
-const {LoginRequest, LogoutRequest, CreateUserRequest} = require('./apiservice_pb.js');
+const {LoginRequest, LogoutRequest, CreateUserRequest, GetSessionRequest} = require('./apiservice_pb.js');
 const {APIServiceClient} = require('./apiservice_grpc_web_pb.js');
 
 // TODO: resolve or get endpoint from .env
 let shortCxClient = new APIServiceClient("http://localhost:8080");
 
 // Populate login/signup or account/signout
-PopulateSessionModules();
+window.addEventListener('load', function() {
+    PopulateSessionModules();
+});
 
 function PopulateSessionModules() {
+    let dest = document.getElementById("accounts");
     let authToken = localStorage.getItem("Authorization");
+    let foundSession = false;
     if (authToken) {
-        // try to get state
-        return;
+        let request = new GetSessionRequest();
+        request.setAuthToken(authToken);
+        shortCxClient.getSession(request, {}, (err, resp) => {
+            if (err) {
+                console.warn("Session invalid or expired: " + err);
+            } else {
+                foundSession = true;
+                let respObj = resp.toObject();
+                clearContents(dest);
+                dest.appendChild(AccountModule(respObj.username, DoLogout));
+            }
+        });
     } 
 
     // No token or expired session -> login/signup modules
-    document.body.appendChild(LoginModule(DoLogin));
-    document.body.appendChild(SignupModule(DoSignup));
+    if (!foundSession) {
+        clearContents(dest);
+        dest.appendChild(LoginModule(DoLogin));
+        dest.appendChild(SignupModule(DoSignup));
+    } 
+}
 
+function clearContents(element) {
+    while (element.firstChild) {
+        element.removeChild(element.lastChild);
+    }
 }
 
 function DoLogin(username, password) {
@@ -32,6 +54,22 @@ function DoLogin(username, password) {
             let respObj = resp.toObject();
             localStorage.setItem("Authorization", respObj.authToken);
             console.log("Login Succeeded!");
+            PopulateSessionModules();
+        }
+    });
+}
+
+function DoLogout() {
+    let request = new LogoutRequest();
+    request.setAuthToken(localStorage.getItem("Authorization"));
+
+    shortCxClient.logout(request, {}, (err, resp) => {
+        if (err) {
+            console.error(err);
+        } else {
+            localStorage.removeItem("Authorization");
+            console.log("Successfully logged out!");
+            PopulateSessionModules();
         }
     });
 }
@@ -49,11 +87,30 @@ function DoSignup(username, password, passwordConf) {
             let respObj = resp.toObject();
             localStorage.setItem("Authorization", respObj.authToken);
             console.log("Creation Succeeded");
+            PopulateSessionModules();
         }
     });
 }
 
-function LoginModule(callback) {
+function AccountModule(username, logoutCallback) {
+    const div = document.createElement("div");
+    const header = document.createElement("h3");
+    header.innerText = `Welcome, ${username}!`;
+    div.appendChild(header);
+ 
+    let logout = document.createElement('input');
+    logout.setAttribute('type', 'button');
+    logout.setAttribute('value', 'Logout');
+    div.appendChild(logout);
+
+    logout.addEventListener("click", () => {
+        logoutCallback();
+    });
+
+    return div;
+}
+
+function LoginModule(loginCallback) {
     const div = document.createElement("div");
     div.classList.add("FormModule");
     const header = document.createElement("h3");
@@ -76,13 +133,13 @@ function LoginModule(callback) {
     div.appendChild(submit);
 
     submit.addEventListener("click", () => {
-        callback(username.value, password.value);
+        loginCallback(username.value, password.value);
     });
 
     return div;
 }
 
-function SignupModule(callback) {
+function SignupModule(signupCallback) {
     const div = document.createElement("div");
     div.classList.add("FormModule");
     const header = document.createElement("h3");
@@ -111,7 +168,7 @@ function SignupModule(callback) {
     div.appendChild(submit);
 
     submit.addEventListener("click", () => {
-        callback(username.value, password.value, passwordConf.value);
+        signupCallback(username.value, password.value, passwordConf.value);
     });
 
     return div;
