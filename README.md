@@ -1,10 +1,15 @@
 # ShortCx
 Polygot Microservice-based URL shortener using gRPC.
 
-API Gateway: Go  
+Client: NGINX + Webpack + gRPC-web  
+Proxy: Envoy Proxy  
+API Gateway Service: Go  
 Authorization Service: Python  
+Shortcut Management Service: Go  
 User Management Service: C#  
-Shortcut Management Service: TBD  
+Database: MySQL  
+Session Management: Redis
+
 
 ## Architecture
 ### Services
