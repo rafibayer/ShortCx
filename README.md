@@ -4,7 +4,7 @@ Polygot Microservice-based URL shortener using gRPC.
 API Gateway: Go  
 Authorization Service: Python  
 User Management Service: C#  
-Shortcut Management Service: TBD  
+Shortcut Management Service: Go  
 
 ## Architecture
 ### Services
