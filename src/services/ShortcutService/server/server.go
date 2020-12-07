@@ -15,12 +15,13 @@ import (
 // Server implements ShortcutService gRPC service
 type Server struct {
 	shortcut.UnimplementedShortcutServiceServer
-	Store models.ShortcutStore
+	Store      models.ShortcutStore
+	Sanitizier *Sanitizer
 }
 
 // NewServer returns a pointer to a new server with a given store
 func NewServer(store models.ShortcutStore) *Server {
-	return &Server{Store: store}
+	return &Server{Store: store, Sanitizier: NewSanitizer()}
 }
 
 // Helper to return error with appropriate gRPC status
@@ -34,7 +35,7 @@ func gRPCError(err error) error {
 
 // CreateShortcut handles CreateShortcutRequests forwarded from APIService
 func (s *Server) CreateShortcut(ctx context.Context, request *shortcut.InternalCreateShortcutRequest) (*api.CreateShortcutResponse, error) {
-	clean, err := Sanitize(request.TargetUrl)
+	clean, err := s.Sanitizier.Sanitize(request.TargetUrl)
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
