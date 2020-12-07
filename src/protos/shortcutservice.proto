@@ -8,6 +8,7 @@ service ShortcutService {
     rpc CreateShortcut (InternalCreateShortcutRequest) returns (CreateShortcutResponse) {}
     rpc DeleteShortcut (InternalDeleteShortcutRequest) returns (DeleteShortcutResponse) {}
     rpc GetShortcut (GetShortcutRequest) returns (GetShortcutResponse) {}
+    rpc GetAllShortcuts (InternalGetAllRequest) returns (GetAllShortcutsResponse) {}
 }
 
 message InternalCreateShortcutRequest {
@@ -18,4 +19,8 @@ message InternalCreateShortcutRequest {
 message InternalDeleteShortcutRequest {
     int32 auth_user_id = 1;
     string url_token = 2;
+}
+
+message InternalGetAllRequest {
+    int32 auth_user_id = 1;
 }

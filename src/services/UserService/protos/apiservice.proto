@@ -19,6 +19,8 @@ service APIService {
     rpc DeleteShortcut (DeleteShortcutRequest) returns (DeleteShortcutResponse) {}
     // Get url of existing shortcut
     rpc GetShortcut (GetShortcutRequest) returns (GetShortcutResponse) {}
+    // Get all of a users shortcuts
+    rpc GetAllShortcuts (GetAllShortcutsRequest) returns (GetAllShortcutsResponse) {}
 }
 
 // Message to create a new user
@@ -87,6 +89,21 @@ message GetShortcutRequest {
 
 message GetShortcutResponse {
     string target_url = 1;
+}
+
+message ShortcutDetail {
+    string url_token = 1;
+    string target_url = 2;
+    string created_at = 3;
+    int32 visits = 4; 
+}
+
+message GetAllShortcutsRequest {
+    string auth_token = 1;
+}
+
+message GetAllShortcutsResponse {
+    repeated ShortcutDetail shortcuts = 1;
 }
 
 

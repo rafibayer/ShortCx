@@ -128,3 +128,18 @@ func (s *Server) GetShortcut(ctx context.Context, request *api.GetShortcutReques
 	}
 	return resp, nil
 }
+
+// GetAllShortcuts handles GetAllShortcuts requests, passing them to ShortcutService
+func (s *Server) GetAllShortcuts(ctx context.Context, request *api.GetAllShortcutsRequest) (*api.GetAllShortcutsResponse, error) {
+	sessionState, err := s.getSession(request.AuthToken)
+	if err != nil {
+		return nil, gRPCError(err)
+	}
+
+	internalGetAll := &shortcut.InternalGetAllRequest{AuthUserId: sessionState.UserId}
+	resp, err := s.ShortcutClient.GetAllShortcuts(context.Background(), internalGetAll)
+	if err != nil {
+		return nil, gRPCError(err)
+	}
+	return resp, nil
+}

@@ -1,5 +1,6 @@
-const {LoginRequest, LogoutRequest, CreateUserRequest,
-        GetSessionRequest, CreateShortcutRequest} = require('./apiservice_pb.js');
+const { LoginRequest, LogoutRequest, CreateUserRequest,
+        GetSessionRequest, CreateShortcutRequest, DeleteShortcutRequest,
+        GetAllShortcutsRequest} = require('./apiservice_pb.js');
 const {APIServiceClient} = require('./apiservice_grpc_web_pb.js');
 
 // TODO: resolve or get endpoint from .env
@@ -13,8 +14,10 @@ window.addEventListener('load', function() {
 function PopulatePage() {
     let accounts = document.getElementById("accounts");
     let creation = document.getElementById("creation");
+    let management = document.getElementById("management");
     let authToken = localStorage.getItem("Authorization");
     let foundSession = false;
+    
     if (authToken) {
         let request = new GetSessionRequest();
         request.setAuthToken(authToken);
@@ -22,12 +25,14 @@ function PopulatePage() {
             if (err) {
                 console.warn("Session invalid or expired: " + err);
             } else {
-                foundSession = true;
-                let respObj = resp.toObject();
                 clearContents(accounts);
                 clearContents(creation);
+                clearContents(management);
+                foundSession = true;
+                let respObj = resp.toObject();
                 accounts.appendChild(AccountModule(respObj.username, DoLogout));
                 creation.appendChild(ShortcutCreateModule(DoCreate));
+                management.appendChild(ManagementModule());
             }
         });
     } 
@@ -36,6 +41,7 @@ function PopulatePage() {
     if (!foundSession) {
         clearContents(accounts);
         clearContents(creation);
+        clearContents(management);
         accounts.appendChild(LoginModule(DoLogin));
         accounts.appendChild(SignupModule(DoSignup));
     } 
@@ -107,9 +113,23 @@ function DoCreate(targetUrl, resultElement) {
             console.error(err);
         } else {
             let respObj = resp.toObject();
-            resultElement.innerText = `${window.location.origin}/${respObj.urlToken}`;
+            resultElement.innerText = `New: ${window.location.host}/${respObj.urlToken}`;
         }
     })
+}
+
+function DoDelete(urlToken, element) {
+    let request = new DeleteShortcutRequest();
+    request.setAuthToken(localStorage.getItem("Authorization"));
+    request.setUrlToken(urlToken);
+
+    shortCxClient.deleteShortcut(request, {}, (err, resp) => {
+        if (err) {
+            console.error(err);
+        } else {
+            element.parentNode.removeChild(element);
+        }
+    });
 }
 
 function AccountModule(username, logoutCallback) {
@@ -210,14 +230,68 @@ function ShortcutCreateModule(createCallback) {
     create.setAttribute('value', 'Create Shortcut');
     div.appendChild(create);
 
-    let result = document.createElement("h3");
+    let result = document.createElement("h2");
     div.appendChild(result);
 
     create.addEventListener("click", () => {
         createCallback(targetUrl.value, result);
     });
+    return div;
+}
 
+function ManagementModule() {
+    let div = document.createElement("div");
+    let request = new GetAllShortcutsRequest();
+    request.setAuthToken(localStorage.getItem("Authorization"));
 
+    shortCxClient.getAllShortcuts(request, {}, (err, resp) => {
+        if (err) {
+            console.error(err);
+        } else {
+            let allItems = resp.toObject().shortcutsList;
+            allItems.forEach(shortcut => {
+                div.appendChild(
+                    ShortcutDetailModule(
+                        shortcut.urlToken,
+                        shortcut.targetUrl,
+                        shortcut.createdAt,
+                        shortcut.visits));
+            });
+        }
+    });
+
+    return div;
+}
+
+function ShortcutDetailModule(token, target, createdAt, visits) {
+    let div = document.createElement("div");
+    div.classList.add("ShortcutDetail");
+
+    let header = document.createElement("h3");
+    header.innerText =  `${window.location.host}/${token}`;
+    div.appendChild(header);
+
+    let anchor = document.createElement("a");
+    anchor.setAttribute("href", target);
+    anchor.innerText = target;
+    div.appendChild(anchor);
+
+    let date = document.createElement("h4");
+    date.innerText = `Created on ${createdAt}`;
+    div.appendChild(date);
+
+    let visitsDisp = document.createElement("h4");
+    visitsDisp.innerText = `Visits: ${visits}`;
+    div.appendChild(visitsDisp);
+
+    let deleteBtn = document.createElement("input");
+    deleteBtn.setAttribute('type', 'button');
+    deleteBtn.setAttribute('value', 'Delete');
+    div.appendChild(deleteBtn);
+
+    deleteBtn.addEventListener("click", () => {
+        DoDelete(token, div);
+    });
     return div;
 }
 

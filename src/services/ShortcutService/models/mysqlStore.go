@@ -1,6 +1,7 @@
 package models
 
 import (
+	"ShortCx/api"
 	"database/sql"
 	"log"
 	"math/rand"
@@ -89,6 +90,30 @@ func (store *MySQLStore) Get(urlToken string) (string, error) {
 	}
 	defer store.incVisits(urlToken)
 	return result, nil
+}
+
+// GetAll returns ShortcutDetails for all shortcuts of a given user (by userID)
+func (store *MySQLStore) GetAll(userID int32) ([]*api.ShortcutDetail, error) {
+	getaq := "SELECT token, target_url, created_at, visits FROM shortcuts WHERE user_id=?"
+	rows, err := store.db.Query(getaq, userID)
+	if err != nil {
+		log.Printf("Error getting all: %v", err)
+		return nil, err
+	}
+	defer rows.Close()
+
+	var result []*api.ShortcutDetail
+	for rows.Next() {
+		cur := &api.ShortcutDetail{}
+		err := rows.Scan(&cur.UrlToken, &cur.TargetUrl, &cur.CreatedAt, &cur.Visits)
+		if err != nil {
+			return nil, err
+		}
+		result = append(result, cur)
+	}
+
+	return result, nil
+
 }
 
 func generateToken() string {

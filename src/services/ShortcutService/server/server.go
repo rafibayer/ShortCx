@@ -65,3 +65,14 @@ func (s *Server) GetShortcut(ctx context.Context, request *api.GetShortcutReques
 	resp := &api.GetShortcutResponse{TargetUrl: target}
 	return resp, nil
 }
+
+// GetAllShortcuts handles GetAllShortcutsRequests forwarded from APIService
+func (s *Server) GetAllShortcuts(ctx context.Context, request *shortcut.InternalGetAllRequest) (*api.GetAllShortcutsResponse, error) {
+	shortcuts, err := s.Store.GetAll(request.AuthUserId)
+	if err != nil {
+		return nil, gRPCError(err)
+	}
+
+	resp := &api.GetAllShortcutsResponse{Shortcuts: shortcuts}
+	return resp, nil
+}

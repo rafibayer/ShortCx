@@ -85,21 +85,12 @@ class TestApiService(unittest.TestCase):
         )
         self.stub.GetShortcut(req)
 
-
-    # def test_DeleteShortcut(self):
-    #     request = apiservice_pb2.DeleteShortcutRequest(
-    #         auth_token="FAKE TOKEN",
-    #         url_token="FAKE TOKEN")
-        
-    #     # print("calling deleteshortcut")
-    #     resp = self.stub.DeleteShortcut(request)
-
-    # def test_GetShortcut(self):
-    #     request = apiservice_pb2.GetShortcutRequest(
-    #         url_token="FAKE TOKEN")
-        
-    #     # print("calling getshortcut")
-    #     resp = self.stub.GetShortcut(request)
+    def test_GetAllShortcuts(self):
+        token = self.makeSess("rafi", "mypassword")
+        req = apiservice_pb2.GetAllShortcutsRequest(
+            auth_token = token
+        )
+        self.stub.GetAllShortcuts(req)
 
 if __name__ == "__main__":
     unittest.main()
