@@ -13,7 +13,6 @@ import os
 logging.basicConfig(level=logging.DEBUG,
                     format='[%(asctime)s] [%(levelname)s] [%(filename)s:%(lineno)d] %(message)s')
 
-
 class AuthService(authservice_pb2_grpc.AuthServiceServicer):
 
     def __init__(self, auth_controller: Controller):
@@ -94,7 +93,6 @@ def serve(port: str, workers: int, service: AuthService):
 if __name__ == '__main__':
     """Entrypoint for server, collects environment details and serves
     """
-
     # AuthService
     PORT = f"[::]{os.getenv('PORT')}"
     WORKERS = int(os.getenv('WORKERS'))
@@ -115,4 +113,3 @@ if __name__ == '__main__':
     session_store = SessionStore(REDIS_HOST, REDIS_PORT, REDIS_MAX_CON)
     auth_service = AuthService(Controller(data_store, session_store))
     serve(PORT, WORKERS, auth_service)
-

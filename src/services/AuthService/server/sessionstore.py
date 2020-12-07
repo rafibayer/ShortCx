@@ -44,18 +44,6 @@ class SessionState:
         kv["username"] = self.username
         return json.dumps(kv)
 
-    def __eq__(self, other):
-        """Compares 2 SessionState
-
-        Args:
-            other (SessionState): other state
-
-        Returns:
-            bool: True if equal
-        """
-        return self.user_id == other.user_id and self.username == other.username
-    
-
 class SessionStore:
 
     def __init__(self, host, port, max_conn):
@@ -123,7 +111,6 @@ class SessionStore:
         state = SessionState.from_json(state_str)
 
         conn.expire(token, TOKEN_LIFE_SECS)
-
         return state
 
     def _gen_token(self):
@@ -133,5 +120,3 @@ class SessionStore:
             str: Random token
         """
         return secrets.token_urlsafe(TOKEN_BYTES)
-
-    
