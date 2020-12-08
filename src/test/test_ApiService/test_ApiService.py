@@ -27,7 +27,7 @@ class TestApiService(unittest.TestCase):
 
     def makeShort(self, token, target="example.com"):
         request = apiservice_pb2.CreateShortcutRequest(auth_token = token, target_url = target)
-        return self.stub.CreateShortcut(request).url_token
+        return self.stub.CreateShortcut(request).shortcut.url_token
 
     def test_CreateUser(self):
         self.makeAcc(username=self._randname())
