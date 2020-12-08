@@ -47,6 +47,10 @@ Session Management: Redis
 ### Database
 ![ERD](https://github.com/rafibayer/ShortCx/blob/main/readme/ShortCx%20ERD.png)
 
+## License
+Go Crazy.  
+This Project is licensed under the MIT license. see `LICENSE.txt` for more information.
+
 ## Acknowledgements
 * Languages
   * Go
