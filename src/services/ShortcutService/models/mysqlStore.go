@@ -48,15 +48,29 @@ func (store *MySQLStore) incVisits(urlToken string) {
 }
 
 // Create inserts a new Shortcut into the database and returns the generated url_token
-func (store *MySQLStore) Create(userID int32, targetURL string) (string, error) {
+func (store *MySQLStore) Create(userID int32, targetURL string) (*api.ShortcutDetail, error) {
 	insq := "INSERT INTO shortcuts (user_id, token, target_url, created_at, visits) VALUES (?, ?, ?, NOW(), 0)"
 	token := generateToken()
-	_, err := store.db.Exec(insq, userID, token, targetURL)
+	insert, err := store.db.Exec(insq, userID, token, targetURL)
 	if err != nil {
 		log.Printf("Encountered error on insert: %v", err)
-		return "ERROR", err
+		return nil, err
 	}
-	return token, nil
+
+	newID, err := insert.LastInsertId()
+	if err != nil {
+		log.Printf("Error getting last insert ID: %v", err)
+		return nil, err
+	}
+	selq := "SELECT token, target_url, created_at, visits FROM shortcuts WHERE shortcut_id=?"
+	sel := store.db.QueryRow(selq, newID)
+	detail := &api.ShortcutDetail{}
+	err = sel.Scan(&detail.UrlToken, &detail.TargetUrl, &detail.CreatedAt, &detail.Visits)
+	if err != nil {
+		log.Printf("Error reading new shortcut: %v", err)
+		return nil, err
+	}
+	return detail, nil
 }
 
 // Delete removes a shortcut from the database

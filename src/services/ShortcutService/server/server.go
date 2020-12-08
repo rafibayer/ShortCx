@@ -39,11 +39,11 @@ func (s *Server) CreateShortcut(ctx context.Context, request *shortcut.InternalC
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
 	}
-	token, err := s.Store.Create(request.AuthUserId, clean)
+	newShortcut, err := s.Store.Create(request.AuthUserId, clean)
 	if err != nil {
 		return nil, gRPCError(err)
 	}
-	resp := &api.CreateShortcutResponse{UrlToken: token}
+	resp := &api.CreateShortcutResponse{Shortcut: newShortcut}
 	return resp, nil
 }
 

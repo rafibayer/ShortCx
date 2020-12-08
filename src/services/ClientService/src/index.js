@@ -103,7 +103,7 @@ function DoSignup(username, password, passwordConf) {
     });
 }
 
-function DoCreate(targetUrl, resultElement) {
+function DoCreate(targetUrl) {
     let request = new CreateShortcutRequest();
     request.setAuthToken(localStorage.getItem("Authorization"));
     request.setTargetUrl(targetUrl);
@@ -112,8 +112,13 @@ function DoCreate(targetUrl, resultElement) {
         if (err) {
             console.error(err);
         } else {
-            let respObj = resp.toObject();
-            resultElement.innerText = `New: ${window.location.host}/${respObj.urlToken}`;
+            let respObj = resp.toObject().shortcut;
+            let management = document.getElementById("management");
+            management.appendChild(ShortcutDetailModule(
+                respObj.urlToken,
+                respObj.targetUrl,
+                respObj.createdAt,
+                respObj.visits));
         }
     })
 }
@@ -230,11 +235,8 @@ function ShortcutCreateModule(createCallback) {
     create.setAttribute('value', 'Create Shortcut');
     div.appendChild(create);
 
-    let result = document.createElement("h2");
-    div.appendChild(result);
-
     create.addEventListener("click", () => {
-        createCallback(targetUrl.value, result);
+        createCallback(targetUrl.value);
     });
     return div;
 }
@@ -276,11 +278,11 @@ function ShortcutDetailModule(token, target, createdAt, visits) {
     anchor.innerText = target;
     div.appendChild(anchor);
 
-    let date = document.createElement("h4");
+    let date = document.createElement("p");
     date.innerText = `Created on ${createdAt}`;
     div.appendChild(date);
 
-    let visitsDisp = document.createElement("h4");
+    let visitsDisp = document.createElement("p");
     visitsDisp.innerText = `Visits: ${visits}`;
     div.appendChild(visitsDisp);
 
@@ -290,7 +292,9 @@ function ShortcutDetailModule(token, target, createdAt, visits) {
     div.appendChild(deleteBtn);
 
     deleteBtn.addEventListener("click", () => {
-        DoDelete(token, div);
+        if (confirm("Delete this shortcut?")) {
+            DoDelete(token, div);
+        }
     });
     return div;
 }

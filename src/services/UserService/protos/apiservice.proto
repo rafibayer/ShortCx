@@ -71,7 +71,7 @@ message CreateShortcutRequest {
 }
 
 message CreateShortcutResponse {
-    string url_token = 1;
+    ShortcutDetail shortcut = 1;
 }
 
 message DeleteShortcutRequest {
