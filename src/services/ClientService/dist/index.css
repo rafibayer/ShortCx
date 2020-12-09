@@ -1,3 +1,12 @@
+#creation {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    width: 30%;
+}
+
+#creation > * {
+    width: 100%;
+}
+
 .FormModule {
     display: flex;
     flex-direction: column;
@@ -14,7 +23,26 @@
     flex-direction: column;
     width: 30%;
     border: 3px solid #ccc;
-    border-radius: 1em;
+    border-radius: 0.25em;
     margin-bottom: 2%;
     padding-bottom: 1%;
+}
+
+.DetailHeader {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 1em;
+}
+
+.DetailHeader > button {
+    margin-left: 5%;
+}
+
+.ShortcutDetail:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.copyBtn > img{
+    height: 2em;
+    width: 2em;
 }

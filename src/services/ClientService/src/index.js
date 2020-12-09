@@ -118,7 +118,7 @@ function DoCreate(targetUrl) {
         } else {
             let respObj = resp.toObject().shortcut;
             let management = document.getElementById("management");
-            management.appendChild(ShortcutDetailModule(
+            management.prepend(ShortcutDetailModule(
                 respObj.urlToken,
                 respObj.targetUrl,
                 respObj.createdAt,
@@ -242,6 +242,7 @@ function ShortcutCreateModule(createCallback) {
 
     create.addEventListener("click", () => {
         createCallback(targetUrl.value);
+        targetUrl.value = "";
     });
     return div;
 }
@@ -257,7 +258,7 @@ function ManagementModule() {
             console.error(err);
         } else {
             let allItems = resp.toObject().shortcutsList;
-            allItems.forEach(shortcut => {
+            allItems.slice().reverse().forEach(shortcut => {
                 div.appendChild(
                     ShortcutDetailModule(
                         shortcut.urlToken,
@@ -275,9 +276,16 @@ function ShortcutDetailModule(token, target, createdAt, visits) {
     let div = document.createElement("div");
     div.classList.add("ShortcutDetail");
 
-    let header = document.createElement("h3");
-    header.innerText =  `${window.location.host}/${token}`;
+    let header = document.createElement("div");
+    header.classList.add("DetailHeader")
     div.appendChild(header);
+
+    let shortcut = document.createElement("h3");
+    shortcut.innerText = `${window.location.host}/${token}`;
+    header.appendChild(shortcut);
+
+    let copy = CopyModule(shortcut.innerText);
+    header.appendChild(copy);
 
     let anchor = document.createElement("a");
     anchor.setAttribute("href", target);
@@ -303,5 +311,25 @@ function ShortcutDetailModule(token, target, createdAt, visits) {
         }
     });
     return div;
+}
+
+function CopyModule(targetText) {
+    let btn = document.createElement("button");
+    btn.classList.add("copyBtn");
+    let img = document.createElement("img");
+    img.setAttribute("src", "img/copy.png");
+    img.setAttribute("alt", "copy");
+    btn.appendChild(img);
+    btn.addEventListener("click", () => {
+        navigator.clipboard.writeText(targetText)
+        .then(() => {
+            console.log("Copied " + targetText);
+        }, 
+        () => {
+            console.log("Failed to copy text");
+        });
+    });
+
+    return btn;
 }
 
