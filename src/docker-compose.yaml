@@ -4,12 +4,14 @@ services:
     build: services/ClientService
     depends_on: 
       - proxy_svc
+    restart: always
     ports:
       - "80:80"
   proxy_svc:
     build: services/Proxy
     depends_on: 
       - api_svc
+    restart: always
     ports:
       - "8080:8080"
   api_svc:
@@ -18,6 +20,7 @@ services:
       - auth_svc
       - shortcut_svc
       - user_svc
+    restart: always
     environment: 
       PORT: ':9090'
       AUTH_ADDR: 'auth_svc:9091'
@@ -30,6 +33,7 @@ services:
     depends_on: 
       - database_svc
       - session_svc
+    restart: always
     environment: 
       PORT: ':9091'
       WORKERS: '1'
@@ -44,6 +48,7 @@ services:
     build: services/ShortcutService
     depends_on: 
       - database_svc
+    restart: always
     environment: 
       PORT: ':9092'
       DB_HOST: 'database_svc'
@@ -54,8 +59,6 @@ services:
     build: services/UserService
     depends_on: 
       - database_svc
-    #ports: 
-    #  - "9093:9093"
     environment: 
       PORT: '9093'
       DB_HOST: 'database_svc'
@@ -67,11 +70,11 @@ services:
     # Connect to db: docker exec <container name> bash
     #                $ mysql -u <user> -p -h127.0.0.1
     #                $ <password>
-    #command: "--socket=/tmp/mysql.sock" # something to do with windows idk
     image: mysql
     volumes: 
       - ./_test_db_data:/var/lib/mysql
       - ./database/initialization:/docker-entrypoint-initdb.d
+    restart: always
     environment: 
       MYSQL_ROOT_PASSWORD: 'root' # TODO: load these from ignored .env file
       MYSQL_DATABASE: 'db'
