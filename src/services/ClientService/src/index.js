@@ -60,6 +60,7 @@ function DoLogin(username, password) {
 
     shortCxClient.login(request, {}, (err, resp) => {
         if (err) {
+            alert(err.message);
             console.error(err);
         } else {
             let respObj = resp.toObject();
@@ -76,6 +77,7 @@ function DoLogout() {
 
     shortCxClient.logout(request, {}, (err, resp) => {
         if (err) {
+            alert(err.message);
             console.error(err);
         } else {
             localStorage.removeItem("Authorization");
@@ -93,6 +95,7 @@ function DoSignup(username, password, passwordConf) {
 
     shortCxClient.createUser(request, {}, (err, resp) => {
         if (err) {
+            alert(err.message);
             console.error(err);
         } else {
             let respObj = resp.toObject();
@@ -110,6 +113,7 @@ function DoCreate(targetUrl) {
     
     shortCxClient.createShortcut(request, {}, (err, resp) => {
         if (err) {
+            alert(err.message);
             console.error(err);
         } else {
             let respObj = resp.toObject().shortcut;
@@ -130,6 +134,7 @@ function DoDelete(urlToken, element) {
 
     shortCxClient.deleteShortcut(request, {}, (err, resp) => {
         if (err) {
+            alert(err.message);
             console.error(err);
         } else {
             element.parentNode.removeChild(element);
@@ -248,6 +253,7 @@ function ManagementModule() {
 
     shortCxClient.getAllShortcuts(request, {}, (err, resp) => {
         if (err) {
+            alert(err.message);
             console.error(err);
         } else {
             let allItems = resp.toObject().shortcutsList;
